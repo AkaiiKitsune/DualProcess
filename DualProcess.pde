@@ -7,6 +7,8 @@ int packetsLostLimit=10;
 
 Server server;
 Client client;
+Players joueur1 = new Players("Square", 0, 0, 50);
+Players joueur2;
 String input = " ";
 int data[];
 
@@ -19,21 +21,43 @@ int data[];
     --> Boucle principale du programme*/
 
 void setup(){
-  size(450, 255);
+  size(800, 500);
   background(204);
   stroke(0);
   frameRate(60); // Slow it down a little
 
-  connect(reset);
-  if(isServer){
 
-  }
+  // connect(reset);
+  // if(isServer){
+  // }
 }
 
 void draw(){
-  send(pmouseX + " " + pmouseY + " " + mouseX + " " + mouseY + "\n");
+  background(0);
+  
+  joueur1.update();
+  joueur1.dessiner();
+  debug();
+
+  // send(pmouseX + " " + pmouseY + " " + mouseX + " " + mouseY + "\n");
 }
 /*=================================================================================*/
+
+void debug(){ //un bon outil de debug.
+  println("                                                            ");
+  println("         Statistics                                   "      );
+  println("Time elapsed    : " + (float)millis()/1000 + " seconds"      );
+  println("Player Position : " + joueur1.position.x+" "+joueur1.position.y);
+  println("Left            : " + joueur1.isLeft                         );
+  println("Up              : " + joueur1.isUp                           );
+  println("Down            : " + joueur1.isDown                         );
+  println("Right           : " + joueur1.isRight                        );
+  println("                                                            ");
+}
+
+
+void keyPressed()  {joueur1.setMove(keyCode, true) ;} //utilisé pour la detection des touches.
+void keyReleased() {joueur1.setMove(keyCode, false);} //utilisé pour la detection des touches.
 
 
 /*=================================================================================*/
