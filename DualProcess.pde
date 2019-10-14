@@ -7,7 +7,7 @@ int packetsLostLimit=10;
 
 Server server;
 Client client;
-Players joueur1 = new Players("Square", 0, 0, 50);
+Players joueur1 = new Players("Square", 0, 200, 20);
 Players joueur2;
 String input = " ";
 int data[];
@@ -34,7 +34,7 @@ void setup(){
 
 void draw(){
   background(0);
-  
+
   joueur1.update();
   joueur1.dessiner();
   debug();
@@ -55,9 +55,16 @@ void debug(){ //un bon outil de debug.
   println("                                                            ");
 }
 
+/*=================================================================================*/
+/* Intéraction :
+** void keyPressed(){}
+    --> Une touche est elle appuyée ?
+** void keyReleased(){}
+    --> Une touche viens d'etre relachée ?*/
 
 void keyPressed()  {joueur1.setMove(keyCode, true) ;} //utilisé pour la detection des touches.
 void keyReleased() {joueur1.setMove(keyCode, false);} //utilisé pour la detection des touches.
+/*=================================================================================*/
 
 
 /*=================================================================================*/

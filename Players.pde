@@ -24,9 +24,10 @@ class Players {
      x = (isRight ? 1 : 0) - (isLeft ? 1 : 0);
 
      acceleration.set(x,y);
-     acceleration.setMag(0.5);      // Set magnitude of acceleration
+     acceleration.setMag(2);      // Set magnitude of acceleration
 
      velocity.add(acceleration);    // Velocity changes according to acceleration
+     velocity.set(velocity.x*(0.95),velocity.y*(0.95));
      velocity.limit(speed);         // Limit the velocity by topspeed
      position.add(velocity);        // Location changes by velocity
    }
