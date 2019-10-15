@@ -39,6 +39,10 @@ class Players {
      else position.set(position.x, constrain(position.y, (height/2)+size/2, height-size/2));
    }
 
+  void setPos(float x_, float y_){
+   position.set(x_, y_);
+  }
+
   boolean setMove(int k, boolean b) { //Permet de verifier si plusieurs touches sont appuiées en même temps.
     switch (k) {
       case 'Z':

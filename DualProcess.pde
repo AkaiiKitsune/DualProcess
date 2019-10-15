@@ -3,14 +3,14 @@ import processing.net.*;
 boolean isServer;
 boolean reset = false;
 int packetsLost;
-int packetsLostLimit=10;
+int packetsLostLimit=20;
 
 Server server;
 Client client;
 Types joueur1;
 Types joueur2;
 String input = " ";
-int data[];
+String data[];
 
 /*=================================================================================*/
 /* Main :
@@ -33,27 +33,46 @@ void setup(){
 }
 
 void draw(){
-  drawBackground(30, 5, 30);
+  drawBackground(40, 3, 30);
 
   joueur1.dessiner();
   joueur1.update();
 
   joueur2.dessiner();
-  joueur2.update();
 
-  // send(pmouseX + " " + pmouseY + " " + mouseX + " " + mouseY + "\n");
+
+  //send(int(joueur1.position.x) + " " + int(joueur1.position.y) + "\n");
+}
+
+void updatePositions(String input){
+  input = input.substring(0, input.indexOf("\n")); // Only up to the newline
+  println(input);
+  data = split(input, ' '); // Split values into an array
+  joueur2.setPos(width - int(data[0]),height - int(data[1]));
 }
 
 /*=================================================================================*/
 void drawBackground(int bgGridScale, int bgScale, int bgColor){
   background(0);
-  fill(bgColor);
+  strokeWeight(0);
   stroke(0);
+  fill(bgColor);
+
+  float x_, y_;
   for(int x = 0; x < width*1.2; x += bgGridScale){
-    for(int y = height/2; y < height*1.2; y += bgGridScale){
-      rect(x-((joueur1.position.x)*0.1), y-((joueur1.position.y)*0.1), bgScale, bgScale);
+    for(int y = 0; y < height*1.2; y += bgGridScale){
+      y_ = y-((joueur1.position.y)*0.1);
+      x_ = x-((joueur1.position.x)*0.1);
+      if(y_>height/2)rect(x_, y_, bgScale, bgScale);
+      y_ = y-((joueur2.position.y)*0.1);
+      x_ = x-((joueur2.position.x)*0.1);
+      if(y_<height/2) rect(x_, y_, bgScale, bgScale);
     }
   }
+
+  stroke(255);
+  strokeWeight(10);
+  line(0, height/2, width, height/2);
 }
 /*=================================================================================*/
 
@@ -103,7 +122,7 @@ void connect(boolean reset){
     server = new Server(this, 12345); // Start a simple server on a port
     println("Server started on " + server.ip() + ", Waiting for client...");
 
-    while(!serverSend("plz respond")){
+    while(!serverSend("plz respond"+"\n")){
       delay(100);
     }
 
@@ -141,11 +160,7 @@ boolean serverSend(String str){
   client = server.available();
   if (client != null) {
     input = client.readString();
-    input = input.substring(0, input.indexOf("\n")); // Only up to the newline
-    data = int(split(input, ' ')); // Split values into an array
-    // Draw line using received coords
-    stroke(0);
-    line(data[0], data[1], data[2], data[3]);
+    updatePositions(input);
     return true;
   }else{
     return false;
@@ -158,11 +173,7 @@ boolean clientSend(String str){
   // Receive data from server
   if (client.available() > 0) {
     input = client.readString();
-    input = input.substring(0, input.indexOf("\n")); // Only up to the newline
-    data = int(split(input, ' ')); // Split values into an array
-    // Draw line using received coords
-    stroke(0);
-    line(data[0], data[1], data[2], data[3]);
+    updatePositions(input);
     return true;
   }else{
     return false;

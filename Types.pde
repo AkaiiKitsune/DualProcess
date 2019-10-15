@@ -19,13 +19,13 @@ class Types extends Players{
     switch(type){
       case "Zaba":
         rectMode(CENTER);
+        stroke(255);
+        strokeWeight(5);
         fill(colorPlayer);
-        stroke(5);
         rect(position.x, position.y, size, size);
       break;
 
       default:
-        println("AAAAAAAAAAAAAAAA");
       break;
     }
   }
