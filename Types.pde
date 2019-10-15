@@ -22,7 +22,13 @@ class Types extends Players{
         stroke(255);
         strokeWeight(5);
         fill(colorPlayer);
-        rect(position.x, position.y, size, size);
+
+        pushMatrix();
+        translate(position.x, position.y);
+        rotate(radians(angle));
+        rect(0, 0, size, size);
+        line(size/4, 0, size/2, 0);
+        popMatrix();
       break;
 
       default:

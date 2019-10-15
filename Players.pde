@@ -4,6 +4,7 @@ class Players {
   PVector position, velocity, acceleration; //Vecteurs pour le deplacement du joueur.
   boolean isLeft, isRight, isUp, isDown, isPlayer; //Booleens permettant de savoir si l'utilisateur appuie sur le clavier.
   float x, y, speed, size, offset; //Variables utilisées pour l'affichage et les calculs de positions.
+  float angle;
   String type; //Type du joueur.
 
   // ==================================================== //
@@ -24,12 +25,18 @@ class Players {
      x = (isRight ? 1 : 0) - (isLeft ? 1 : 0);
 
      acceleration.set(x,y);
-     acceleration.setMag(2);      // Set magnitude of acceleration
+     updatePosition();
 
-     velocity.add(acceleration);    // Velocity changes according to acceleration
-     velocity.set(velocity.x*(0.95),velocity.y*(0.95));
-     velocity.limit(speed);         // Limit the velocity by topspeed
-     position.add(velocity);        // Location changes by velocity
+     float d = dist(position.x, position.y, mouseX, mouseY);
+     float a = PI - atan2(position.y - mouseY, position.x - mouseX);
+     float dx = mouseX + (1 + cos(a));
+     float dy = mouseY + (1 - sin(a));
+
+     angle = angleBetweenPV_PV(position, new PVector(mouseX, mouseY));
+     angle=degrees(angle);
+     println(angle);
+
+     //line(position.x, position.y, dx, dy);
 
      if(position.y-size/2<=1 || position.y+size/2>=height) velocity.set(velocity.x,0);
      if(position.x-size/2<=0 || position.x+size/2>=width ) velocity.set(0,velocity.y);
@@ -39,8 +46,31 @@ class Players {
      else position.set(position.x, constrain(position.y, (height/2)+size/2, height-size/2));
    }
 
-  void setPos(float x_, float y_){
+  float angleBetweenPV_PV(PVector a, PVector mousePV) {
+    PVector d = new PVector();
+    // calc angle
+    pushMatrix();
+    translate(a.x, a.y);
+    // delta
+    d.x = mousePV.x - a.x;
+    d.y = mousePV.y - a.y;
+    // angle
+    float angle1 = atan2(d.y, d.x);
+    popMatrix();
+    return angle1;
+  }
+
+  void updatePosition(){
+    acceleration.setMag(2);      // Set magnitude of acceleration
+    velocity.add(acceleration);    // Velocity changes according to acceleration
+    velocity.set(velocity.x*(0.95),velocity.y*(0.95));
+    velocity.limit(speed);         // Limit the velocity by topspeed
+    position.add(velocity);        // Location changes by velocity
+  }
+
+  void setPos(int x_, int y_, int a_){
    position.set(x_, y_);
+   angle = a_;
   }
 
   boolean setMove(int k, boolean b) { //Permet de verifier si plusieurs touches sont appuiées en même temps.
