@@ -5,16 +5,14 @@ class Players {
   float x, y, speed;
   PVector position, velocity;
   PVector acceleration;
-  String type;
 
   // ==================================================== //
   /*** Methods ***/
-  Players(String type_, float x_, float y_, float speed_){     //constructor
+  Players(float x_, float y_, float speed_){     //constructor
           acceleration = new PVector(0.0, 0.0);
           position = new PVector(x_, y_);
           velocity = new PVector(0,0);
           speed = speed_;
-          type = type_;
   }
 
   // ==================================================== //
@@ -31,19 +29,6 @@ class Players {
      velocity.limit(speed);         // Limit the velocity by topspeed
      position.add(velocity);        // Location changes by velocity
    }
-
-  void dessiner(){     //Draws the player
-    switch(type){
-      case "Square":
-        rectMode(CENTER);
-        rect(position.x, position.y, 80, 80);
-      break;
-
-      default:
-        println("AAAAAAAAAAAAAAAA");
-      break;
-    }
-  }
 
   boolean setMove(int k, boolean b) { //Permet de verifier si plusieurs touches sont appuiées en même temps.
     switch (k) {
