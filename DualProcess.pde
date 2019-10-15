@@ -7,7 +7,7 @@ int packetsLostLimit=10;
 
 Server server;
 Client client;
-Types joueur1 = new Types(0, 200, 20);
+Types joueur1 = new Types("Zaba", 0, 200, 20);
 Types joueur2;
 String input = " ";
 int data[];
@@ -35,25 +35,24 @@ void setup(){
 void draw(){
   background(0);
 
-  //joueur1.update();
-  //joueur1.dessiner();
-  // debug();
+  joueur1.compute();
+  debug();
 
   // send(pmouseX + " " + pmouseY + " " + mouseX + " " + mouseY + "\n");
 }
 /*=================================================================================*/
 
-// void debug(){ //un bon outil de debug.
-//   println("                                                            ");
-//   println("         Statistics                                   "      );
-//   println("Time elapsed    : " + (float)millis()/1000 + " seconds"      );
-//   println("Player Position : " + joueur1.position.x+" "+joueur1.position.y);
-//   println("Left            : " + joueur1.isLeft                         );
-//   println("Up              : " + joueur1.isUp                           );
-//   println("Down            : " + joueur1.isDown                         );
-//   println("Right           : " + joueur1.isRight                        );
-//   println("                                                            ");
-// }
+void debug(){ //un bon outil de debug.
+  println("                                                            ");
+  println("         Statistics                                   "      );
+  println("Time elapsed    : " + (float)millis()/1000 + " seconds"      );
+  println("Player Position : " + joueur1.position.x+" "+joueur1.position.y);
+  println("Left            : " + joueur1.isLeft                         );
+  println("Up              : " + joueur1.isUp                           );
+  println("Down            : " + joueur1.isDown                         );
+  println("Right           : " + joueur1.isRight                        );
+  println("                                                            ");
+}
 
 /*=================================================================================*/
 /* Intéraction :
@@ -62,8 +61,8 @@ void draw(){
 ** void keyReleased(){}
     --> Une touche viens d'etre relachée ?*/
 
-//void keyPressed()  {joueur1.setMove(keyCode, true) ;} //utilisé pour la detection des touches.
-//void keyReleased() {joueur1.setMove(keyCode, false);} //utilisé pour la detection des touches.
+void keyPressed()  {joueur1.setMove(keyCode, true) ;} //utilisé pour la detection des touches.
+void keyReleased() {joueur1.setMove(keyCode, false);} //utilisé pour la detection des touches.
 /*=================================================================================*/
 
 

@@ -5,15 +5,16 @@ class Types extends Players{
 
    // ==================================================== //
    /*** Methods ***/
-  Types(float x_, float y_, float speed_){
-    super(x_, y_, speed_);
+  Types(String type_, float x_, float y_, float speed_){
+    super(type_, x_, y_, speed_);
+    type = type_;
   }
 
   // ==================================================== //
   /*** Functions ***/
   void dessiner(){     //Draws the player
     switch(type){
-      case "Square":
+      case "Zaba":
         rectMode(CENTER);
         rect(position.x, position.y, 80, 80);
       break;
@@ -26,7 +27,10 @@ class Types extends Players{
   // Méthode animer : héritée, donc pas besoin de la réécrire
 
 
-
+ void compute(){
+   this.update();
+   this.dessiner();
+ }
 
 
 }

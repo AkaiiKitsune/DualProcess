@@ -8,7 +8,7 @@ class Players {
 
   // ==================================================== //
   /*** Methods ***/
-  Players(float x_, float y_, float speed_){     //constructor
+  Players(String type_,float x_, float y_, float speed_){     //constructor
           acceleration = new PVector(0.0, 0.0);
           position = new PVector(x_, y_);
           velocity = new PVector(0,0);
