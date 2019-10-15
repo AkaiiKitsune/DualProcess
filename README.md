@@ -1,4 +1,7 @@
 # DualProcess
  Un port du jeu dual en processing
 
---Projet toujours en early stage, seul le serveur est fonctionnel
+--Etat du jeu :
+ Deplacement fonctionnel en solo et multijoueur
+ Orientation du perso fonctionnelle
+ Background dynamique
