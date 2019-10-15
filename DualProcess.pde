@@ -7,11 +7,10 @@ int packetsLostLimit=10;
 
 Server server;
 Client client;
-Types joueur1 = new Types("Zaba", 0, 200, 20);
+Types joueur1;
 Types joueur2;
 String input = " ";
 int data[];
-
 
 /*=================================================================================*/
 /* Main :
@@ -21,11 +20,12 @@ int data[];
     --> Boucle principale du programme*/
 
 void setup(){
-  size(800, 500);
+  size(800, 1000);
   background(204);
   stroke(0);
   frameRate(60); // Slow it down a little
-
+  joueur1 = new Types("Zaba", true, color(150), 200, 200, 80, 20);
+  joueur2 = new Types("Zaba", false, color(200), 200, 200, 80, 20);
 
   // connect(reset);
   // if(isServer){
@@ -33,26 +33,30 @@ void setup(){
 }
 
 void draw(){
-  background(0);
+  drawBackground(30, 5, 30);
 
-  joueur1.compute();
-  debug();
+  joueur1.dessiner();
+  joueur1.update();
+
+  joueur2.dessiner();
+  joueur2.update();
 
   // send(pmouseX + " " + pmouseY + " " + mouseX + " " + mouseY + "\n");
 }
+
+/*=================================================================================*/
+void drawBackground(int bgGridScale, int bgScale, int bgColor){
+  background(0);
+  fill(bgColor);
+  stroke(0);
+  for(int x = 0; x < width*1.2; x += bgGridScale){
+    for(int y = height/2; y < height*1.2; y += bgGridScale){
+      rect(x-((joueur1.position.x)*0.1), y-((joueur1.position.y)*0.1), bgScale, bgScale);
+    }
+  }
+}
 /*=================================================================================*/
 
-void debug(){ //un bon outil de debug.
-  println("                                                            ");
-  println("         Statistics                                   "      );
-  println("Time elapsed    : " + (float)millis()/1000 + " seconds"      );
-  println("Player Position : " + joueur1.position.x+" "+joueur1.position.y);
-  println("Left            : " + joueur1.isLeft                         );
-  println("Up              : " + joueur1.isUp                           );
-  println("Down            : " + joueur1.isDown                         );
-  println("Right           : " + joueur1.isRight                        );
-  println("                                                            ");
-}
 
 /*=================================================================================*/
 /* Intéraction :
@@ -64,7 +68,6 @@ void debug(){ //un bon outil de debug.
 void keyPressed()  {joueur1.setMove(keyCode, true) ;} //utilisé pour la detection des touches.
 void keyReleased() {joueur1.setMove(keyCode, false);} //utilisé pour la detection des touches.
 /*=================================================================================*/
-
 
 /*=================================================================================*/
 /* Networking :

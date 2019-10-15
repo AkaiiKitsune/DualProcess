@@ -1,18 +1,20 @@
 // ==================================================== //
 class Players {
   /*** Attributes ***/
-  boolean isLeft, isRight, isUp, isDown;
-  float x, y, speed;
-  PVector position, velocity;
-  PVector acceleration;
+  PVector position, velocity, acceleration; //Vecteurs pour le deplacement du joueur.
+  boolean isLeft, isRight, isUp, isDown, isPlayer; //Booleens permettant de savoir si l'utilisateur appuie sur le clavier.
+  float x, y, speed, size, offset; //Variables utilisées pour l'affichage et les calculs de positions.
+  String type; //Type du joueur.
 
   // ==================================================== //
   /*** Methods ***/
-  Players(String type_,float x_, float y_, float speed_){     //constructor
-          acceleration = new PVector(0.0, 0.0);
-          position = new PVector(x_, y_);
-          velocity = new PVector(0,0);
-          speed = speed_;
+  Players(String type_, boolean isPlayer_, int colorPlayer, float x_, float y_, float size_, float speed_){     //constructor
+          acceleration = new PVector(0.0, 0.0); //Initialise le vecteur acceleration
+          position = new PVector(x_, y_); //Initialise le vecteur position
+          velocity = new PVector(0,0); //Initialise le vecteur vélocité
+          isPlayer = isPlayer_;
+          speed = speed_; //Initialise la variable vitesse max
+          size = size_; //Initialise la taille du joueur
   }
 
   // ==================================================== //
@@ -28,6 +30,13 @@ class Players {
      velocity.set(velocity.x*(0.95),velocity.y*(0.95));
      velocity.limit(speed);         // Limit the velocity by topspeed
      position.add(velocity);        // Location changes by velocity
+
+     if(position.y-size/2<=1 || position.y+size/2>=height) velocity.set(velocity.x,0);
+     if(position.x-size/2<=0 || position.x+size/2>=width ) velocity.set(0,velocity.y);
+
+     position.set(constrain(position.x, 0+size/2, width-size/2), position.y);
+     if(!isPlayer)position.set(position.x, constrain(position.y, 0+size/2, (height/2)-size/2));
+     else position.set(position.x, constrain(position.y, (height/2)+size/2, height-size/2));
    }
 
   boolean setMove(int k, boolean b) { //Permet de verifier si plusieurs touches sont appuiées en même temps.
