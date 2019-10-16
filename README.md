@@ -41,7 +41,7 @@
 
 * [A propos du projet](#a-propos-du-projet)
   * [IDE et software](#ide-et-software)
-* [Installation](#executer-le-programme)
+* [Executer le programme](#executer-le-programme)
 * [Mapping des touches](#mapping-des-touches)
 * [Contact](#contact)
 
