@@ -23,7 +23,7 @@
   <h3 align="center">Dual! Processing</h3>
 
   <p align="center">
-    An awesome README template to jumpstart your projects!
+    Une recréation d'un jeu en processing
     <br />
     <br />
     <a href="https://github.com/AkaiiKitsune/DualProcess">View Demo (p5.js)</a>
