@@ -1,7 +1,7 @@
 import processing.net.*;
 
 boolean holdingMouse, isServer, reset = false,
-                      isOnline=true;
+                      isOnline=false;
 
 int packetsLost, holdingTime,
                 packetsLostLimit=20;
