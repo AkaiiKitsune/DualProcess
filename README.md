@@ -1,7 +1,8 @@
 # DualProcess
  Un port du jeu dual en processing
 
---Etat du jeu :
-Deplacement fonctionnel en solo et multijoueur /
+--Etat du jeu (Uniquement zaba est intégré pour le moment) :
+Deplacement fonctionnel /
 Orientation du perso fonctionnelle /
-Background dynamique
+Background dynamique / 
+Affichage des munitions fonctionnel
