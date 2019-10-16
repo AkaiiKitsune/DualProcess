@@ -87,7 +87,7 @@ Ce jeu s'utilise avec les touches zqsd et les flechs dirctionelles. La visée se
 <!-- CONTACT -->
 ## Contact
 
-AkaiiKitsune- [@Fareweell_](https://twitter.com/Fareweell_) - Farewell_#0908
+AkaiiKitsune - [@Fareweell_](https://twitter.com/Fareweell_) - Farewell_#0908
 
 Projet: [https://github.com/AkaiiKitsune/DualProcess](https://github.com/AkaiiKitsune/DualProcess)
 
