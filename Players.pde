@@ -4,7 +4,7 @@ class Players {
   PVector position, velocity, acceleration; //Vecteurs pour le deplacement du joueur.
   boolean isLeft, isRight, isUp, isDown, isPlayer; //Booleens permettant de savoir si l'utilisateur appuie sur le clavier.
   float x, y, speed, size, offset; //Variables utilisées pour l'affichage et les calculs de positions.
-  float angle;
+  float angle=90;
   String type; //Type du joueur.
 
   // ==================================================== //
@@ -27,14 +27,12 @@ class Players {
      acceleration.set(x,y);
      updatePosition();
 
-     float d = dist(position.x, position.y, mouseX, mouseY);
-     float a = PI - atan2(position.y - mouseY, position.x - mouseX);
-     float dx = mouseX + (1 + cos(a));
-     float dy = mouseY + (1 - sin(a));
+     // float a = PI - atan2(position.y - mouseY, position.x - mouseX);
+     // float dx = mouseX + (1 + cos(a));
+     // float dy = mouseY + (1 - sin(a));
 
      angle = angleBetweenPV_PV(position, new PVector(mouseX, mouseY));
      angle=degrees(angle);
-     println(angle);
 
      //line(position.x, position.y, dx, dy);
 

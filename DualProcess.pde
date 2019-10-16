@@ -1,12 +1,15 @@
 import processing.net.*;
 
-boolean isServer, reset = false;
-int packetsLost, packetsLostLimit=20;
+boolean holdingMouse, isServer, reset = false,
+                      isOnline=true;
+
+int packetsLost, holdingTime, packetsLostLimit=20;
 
 Server server;
 Client client;
 
 Types joueur1, joueur2;
+Munitions joueur1M, joueur2M;
 String input = " ", data[];
 
 /* Main :
@@ -20,26 +23,40 @@ void setup(){
   background(204);
   stroke(0);
   frameRate(60); // Slow it down a little
-  joueur1 = new Types("Zaba", true, color(150), 200, 200, 50, 20);
-  joueur2 = new Types("Zaba", false, color(200), 200, 200, 50, 20);
 
-  // connect(reset);
-  //   if(isServer){
-  // }
+  joueur1 = new Types("Zaba", true, color(150,120,120), width/2, 3*height/4, 50, 20);
+  joueur1M = new Munitions(joueur1);
+
+  joueur2 = new Types("Zaba", false, color(200), width/2, height/4, 50, 20);
+  joueur2M = new Munitions(joueur2);
+
+  if(isOnline){
+    connect(reset);
+      if(isServer){
+    }
+  }
 }
 
 void draw(){
-  drawBackground(40, 5, 30);
+  drawBackground(50, 5, 30);
 
   joueur1.dessiner();
+  joueur1M.dessiner();
   joueur1.update();
 
-  rect(mouseX, mouseY, 10, 10);
 
   joueur2.dessiner();
+  joueur2M.dessiner();
 
+  rect(mouseX, mouseY, 10, 10); //Curseur de la souris
 
-  // send(int(joueur1.position.x) + " " + int(joueur1.position.y) + " " + int(joueur1.angle) + "\n");
+  if(holdingMouse){holdingTime++; joueur1M.hold(holdingTime, false);}
+
+  if(isOnline) send(int(joueur2.colorPlayer) + " " +
+                    int(joueur1.position.x) + " " +
+                    int(joueur1.position.y) + " " +
+                    int(180+joueur1.angle) + " " +
+                    int(joueur1M.ammoLeft) + "\n");
 }
 /*=================================================================================*/
 
@@ -58,7 +75,12 @@ void draw(){
 void updatePlayer2(String input){
   input = input.substring(0, input.indexOf("\n")); // Only up to the newline
   data = split(input, ' '); // Split values into an array
-  joueur2.setPos(width - int(data[0]),height - int(data[1]),  int(data[2]));
+  //joueur2.colorPlayer = int(data[0]); //Color
+  joueur2.setPos(width - int(data[1]), //x
+                 height - int(data[2]), //y
+                 int(data[3])); //angle
+  joueur2M.ammoLeft = int(data[4]); //Balles
+  joueur2M.dessiner(); //Draw le joueur 2
 }
 
 void drawBackground(int bgGridScale, int bgScale, int bgColor){
@@ -94,6 +116,17 @@ void drawBackground(int bgGridScale, int bgScale, int bgColor){
     --> Une touche viens d'etre relachée ?*/
 void keyPressed()  {joueur1.setMove(keyCode, true) ;} //utilisé pour la detection des touches.
 void keyReleased() {joueur1.setMove(keyCode, false);} //utilisé pour la detection des touches.
+void mousePressed() {
+  holdingMouse=true;
+  if(mouseButton == LEFT){
+    joueur1M.shoot(false); println("click");
+  }
+}
+void mouseReleased() {
+    holdingMouse=false;
+    joueur1M.hold(holdingTime, true);
+    holdingTime=0;
+}
 /*=================================================================================*/
 
 
@@ -130,7 +163,7 @@ void connect(boolean reset){
     server = new Server(this, 12345); // Start a simple server on a port
     println("Server started on " + server.ip() + ", Waiting for client...");
 
-    while(!serverSend("plz respond plz"+"\n")){
+    while(!serverSend("arg0 arg1 arg2 arg3 arg4"+"\n")){
       delay(100);
     }
 
