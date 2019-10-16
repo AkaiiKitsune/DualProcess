@@ -83,7 +83,7 @@ class Munitions {
   void shoot(boolean superTir){
     if(!superTir){
       if(ammoLeft>0) ammoLeft--;
-      bgColor+=10;
+      bgColor+=20;
     }
     else{
       println("superTir de " + charge + " balles");

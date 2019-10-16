@@ -1,7 +1,7 @@
 import processing.net.*;
 
 boolean holdingMouse, isServer, reset = false,
-                      isOnline=false;
+                      isOnline=true;
 
 int packetsLost, holdingTime,
                 packetsLostLimit=20;
@@ -27,6 +27,7 @@ void setup(){
   stroke(0);
   frameRate(60); // Slow it down a little
   smooth(4);
+
   joueur1 = new Types("Zaba", true, color(150,120,120), width/2, 3*height/4, 50, 20);
   joueur1M = new Munitions(joueur1);
 
@@ -56,7 +57,7 @@ void draw(){
 
   if(holdingMouse){holdingTime++; joueur1M.hold(holdingTime, false);}
 
-  if(isOnline) send(int(joueur2.colorPlayer) + " " +
+  if(isOnline) send(int(bgColor) + " " +
                     int(joueur1.position.x) + " " +
                     int(joueur1.position.y) + " " +
                     int(180+joueur1.angle) + " " +
@@ -79,7 +80,7 @@ void draw(){
 void updatePlayer2(String input){
   input = input.substring(0, input.indexOf("\n")); // Only up to the newline
   data = split(input, ' '); // Split values into an array
-  //joueur2.colorPlayer = int(data[0]); //Color
+  bgColor = int(data[0]);
   joueur2.setPos(width - int(data[1]), //x
                  height - int(data[2]), //y
                  int(data[3])); //angle
