@@ -1,9 +1,12 @@
 import processing.net.*;
 
 boolean holdingMouse, isServer, reset = false,
-                      isOnline=true;
+                      isOnline=false;
 
-int packetsLost, holdingTime, packetsLostLimit=20;
+int packetsLost, holdingTime,
+                packetsLostLimit=20;
+
+float bgColor=30;
 
 Server server;
 Client client;
@@ -23,7 +26,7 @@ void setup(){
   background(204);
   stroke(0);
   frameRate(60); // Slow it down a little
-
+  smooth(4);
   joueur1 = new Types("Zaba", true, color(150,120,120), width/2, 3*height/4, 50, 20);
   joueur1M = new Munitions(joueur1);
 
@@ -38,7 +41,8 @@ void setup(){
 }
 
 void draw(){
-  drawBackground(50, 5, 30);
+  drawBackground(50, 5, bgColor);
+  if(bgColor>5)bgColor*=0.95;
 
   joueur1.dessiner();
   joueur1M.dessiner();
@@ -83,7 +87,7 @@ void updatePlayer2(String input){
   joueur2M.dessiner(); //Draw le joueur 2
 }
 
-void drawBackground(int bgGridScale, int bgScale, int bgColor){
+void drawBackground(int bgGridScale, int bgScale, float bgColor){
   background(0);
   strokeWeight(2);
   stroke(bgColor);

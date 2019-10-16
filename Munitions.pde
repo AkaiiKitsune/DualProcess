@@ -64,6 +64,7 @@ class Munitions {
           //Il doit rester des balles...
           println("charge en cour : " + (charge+1) + " balles chargees");
           charge++;
+          bgColor=10*charge;
           ammoLeft--;
         }
       }
@@ -80,9 +81,11 @@ class Munitions {
   void shoot(boolean superTir){
     if(!superTir){
       if(ammoLeft>0) ammoLeft--;
+      bgColor+=10;
     }
     else{
       println("superTir de " + charge + " balles");
+      bgColor=20*charge;
     }
   }
 }
