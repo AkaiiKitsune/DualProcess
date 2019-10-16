@@ -28,14 +28,13 @@ class Players {
      acceleration.set(x,y);
      updatePosition();
 
-     // float a = PI - atan2(position.y - mouseY, position.x - mouseX);
-     // float dx = mouseX + (1 + cos(a));
-     // float dy = mouseY + (1 - sin(a));
+    // float a = PI - atan2(position.y - mouseY, position.x - mouseX);
+    // float dx = mouseX + (1 + cos(a));
+    // float dy = mouseY + (1 - sin(a));
+    // line(position.x, position.y, dx, dy);
 
      angle = angleBetweenPV_PV(position, new PVector(mouseX, mouseY));
      angle = degrees(angle);
-
-     //line(position.x, position.y, dx, dy);
 
      if(position.y-size/2<=1 || position.y+size/2>=height) velocity.set(velocity.x,0);
      if(position.x-size/2<=0 || position.x+size/2>=width ) velocity.set(0,velocity.y);

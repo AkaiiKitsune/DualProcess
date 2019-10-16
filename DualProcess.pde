@@ -1,19 +1,18 @@
-import processing.net.*;
+import processing.net.*; //Import network libs
+boolean holdingMouse, isServer, reset = false, isOnline=false; //Declaration des booleens
+int packetsLost, //Compteur de packets perdus
+    holdingTime, //Compeur de temps de mouse hold
+    packetsLostLimit=20; //Nombre maximum de packets perdus avant que la connection soit reset
+float bgColor=30; //Variable gerant la couleur du background
 
-boolean holdingMouse, isServer, reset = false,
-                      isOnline=false;
+Server server; //Objet serveur
+Client client; //Objet client
+String input = " ", //String reçu par le client;
+       data[]; //Tableau dans le quel les données reçues sont stoquées
 
-int packetsLost, holdingTime,
-                packetsLostLimit=20;
+Types joueur1, joueur2; //Objets joueurs
+Bullets bullets1, bullets2; //Objets balles
 
-float bgColor=30;
-
-Server server;
-Client client;
-
-Types joueur1, joueur2;
-Bullets bullets1, bullets2;
-String input = " ", data[];
 
 /* Main :
 /*=================================================================================
@@ -22,8 +21,9 @@ String input = " ", data[];
 ** void draw(){}
     --> Boucle principale du programme*/
 void setup(){
-  size(800, 1000);
-  background(204);
+  size(800, 1000); //Set la taille de la fenetre
+  background(0); //
+  noCursor();
   stroke(0);
   //frameRate(60); // Slow it down a little
   smooth(2);
@@ -36,32 +36,29 @@ void setup(){
   //bullets2 = new Bullets(5, joueur2);
 
   if(isOnline){
+    background(color(100,50,50));
     connect(reset);
-      if(isServer){
-    }
   }
 }
 
 void draw(){
-  drawBackground(50, 5, bgColor);
-  if(bgColor>5)bgColor*=0.95;
+  drawBackground(50, 5, bgColor); //Affiche le background
+  if(bgColor>5)bgColor*=0.95; //Decremente la valeur de la couleur du background, donne de l'effet
 
-  //Hold tir
-  if(holdingMouse && mouseButton == RIGHT){holdingTime++; joueur1.hold(holdingTime, false, bullets1);}
+  if(holdingMouse && mouseButton == RIGHT){holdingTime++; joueur1.hold(holdingTime, false, bullets1);}  //Tir droit maintenu
 
 
   joueur1.update();
-  joueur1.munitionUpdate(joueur1);
-  joueur1.dessiner();
-
-  joueur2.munitionUpdate(joueur2);
-  joueur2.dessiner();
 
   bullets1.showBullets();
   bullets2.showBulletsP2();
 
+  joueur1.munitionUpdate(joueur1);
+  joueur1.dessiner();
+  joueur2.munitionUpdate(joueur2);
+  joueur2.dessiner();
 
-  rect(mouseX, mouseY, 10, 10); //Curseur de la souris
+  fill(bgColor*3); strokeWeight(3); rect(mouseX, mouseY, 10, 10); //Curseur de la souris
 
   //Multiplayer
   if(isOnline) send(int(bgColor) + " " +

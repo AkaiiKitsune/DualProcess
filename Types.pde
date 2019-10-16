@@ -92,8 +92,9 @@ class Types extends Players{
         }
       }
     //Release
-    }else if(holdTime>chargeRate && charge>0){
+    }else if(holdTime>chargeRate || charge==1){
       println("Release");
+      println(charge);
       shoot(true, bullets_);
       charge=0;
       ammoLeft=maxCharge;
@@ -101,7 +102,7 @@ class Types extends Players{
   }
 
   void shoot(boolean superTir, Bullets bullet_){
-    if(!superTir){
+    if(!superTir || charge==1){
       if(ammoLeft>0){
         tirs++; println("tir No " + tirs);
         ammoLeft--;
