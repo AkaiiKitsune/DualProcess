@@ -106,12 +106,13 @@ class Types extends Players{
         tirs++; println("tir No " + tirs);
         ammoLeft--;
         bgColor+=20;
-        bullet_.spitFire(20);
+        bullet_.spitFire(25, 15);
      }
     }
     else{
       println("superTir de " + charge + " balles");
       bgColor=20*charge;
+      bullet_.spitFire( int(25 / (1+(charge*0.05)) ) , int(15 + (1 * charge * 5)) );
     }
   }
 }

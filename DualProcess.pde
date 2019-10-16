@@ -25,14 +25,14 @@ void setup(){
   size(800, 1000);
   background(204);
   stroke(0);
-  frameRate(60); // Slow it down a little
-  smooth(4);
+  //frameRate(60); // Slow it down a little
+  smooth(2);
 
   joueur1 = new Types("Zaba", true, color(150,120,120), width/2, 3*height/4, 50, 20);
   joueur2 = new Types("Zaba", false, color(200), width/2, height/4, 50, 20);
 
-  bullets1 = new Bullets(5, joueur1);
-  bullets2 = new Bullets(5, joueur2);
+  bullets1 = new Bullets(20, joueur1);
+  bullets2 = new Bullets(20, joueur2);
   //bullets2 = new Bullets(5, joueur2);
 
   if(isOnline){
@@ -52,12 +52,13 @@ void draw(){
 
   joueur1.update();
   joueur1.munitionUpdate(joueur1);
-  bullets1.showBullets();
   joueur1.dessiner();
 
   joueur2.munitionUpdate(joueur2);
-  bullets2.showBullets();
   joueur2.dessiner();
+
+  bullets1.showBullets();
+  bullets2.showBulletsP2();
 
 
   rect(mouseX, mouseY, 10, 10); //Curseur de la souris

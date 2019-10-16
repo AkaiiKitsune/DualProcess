@@ -33,7 +33,7 @@ class Players {
      // float dy = mouseY + (1 - sin(a));
 
      angle = angleBetweenPV_PV(position, new PVector(mouseX, mouseY));
-     angle=degrees(angle);
+     angle = degrees(angle);
 
      //line(position.x, position.y, dx, dy);
 
