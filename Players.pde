@@ -1,11 +1,12 @@
 // ==================================================== //
 class Players {
   /*** Attributes ***/
-  PVector position, velocity, acceleration; //Vecteurs pour le deplacement du joueur.
-  boolean isLeft, isRight, isUp, isDown, isPlayer; //Booleens permettant de savoir si l'utilisateur appuie sur le clavier.
-  float x, y, speed, size, offset; //Variables utilisées pour l'affichage et les calculs de positions.
-  float angle=90;
-  String type; //Type du joueur.
+ //Player Attributes
+ PVector position, velocity, acceleration; //Vecteurs pour le deplacement du joueur.
+ boolean isLeft, isRight, isUp, isDown, isPlayer; //Booleens permettant de savoir si l'utilisateur appuie sur le clavier.
+ float x, y, speed, size, offset; //Variables utilisées pour l'affichage et les calculs de positions.
+ float angle=90;
+ String type; //Type du joueur.
 
   // ==================================================== //
   /*** Methods ***/
@@ -19,7 +20,7 @@ class Players {
   }
 
   // ==================================================== //
-  /*** Functions ***/
+  /*** Player Functions ***/
   void update() {
      y = (isDown ? 1 : 0) - (isUp ? 1 : 0);
      x = (isRight ? 1 : 0) - (isLeft ? 1 : 0);
