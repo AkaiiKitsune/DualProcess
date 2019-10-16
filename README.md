@@ -95,12 +95,12 @@ Projet: [https://github.com/AkaiiKitsune/DualProcess](https://github.com/AkaiiKi
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/othneildrew/Best-README-Template.svg?style=flat-square
+[contributors-shield]: https://img.shields.io/github/contributors/AkaiiKitsune/DualProcess.svg?style=flat-square
 [contributors-url]: https://github.com/AkaiiKitsune/DualProcess/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/othneildrew/Best-README-Template.svg?style=flat-square
+[forks-shield]: https://img.shields.io/github/forks/AkaiiKitsune/DualProcess.svg?style=flat-square
 [forks-url]: https://github.com/AkaiiKitsune/DualProcess/network/members
-[stars-shield]: https://img.shields.io/github/stars/othneildrew/Best-README-Template.svg?style=flat-square
+[stars-shield]: https://img.shields.io/github/stars/AkaiiKitsune/DualProcess.svg?style=flat-square
 [stars-url]: https://github.com/AkaiiKitsune/DualProcess/stargazers
-[issues-shield]: https://img.shields.io/github/issues/othneildrew/Best-README-Template.svg?style=flat-square
+[issues-shield]: https://img.shields.io/github/issues/AkaiiKitsune/DualProcess.svg?style=flat-square
 [issues-url]: https://github.com/AkaiiKitsune/DualProcess/issues
 [product-screenshot]: images/screenshot.png
