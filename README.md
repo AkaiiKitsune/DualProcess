@@ -44,7 +44,6 @@
 * [Installation](#executer-le-programme)
 * [Mapping des touches](#mapping-des-touches)
 * [Contact](#contact)
-* [Acknowledgements](#acknowledgements)
 
 
 
