@@ -49,14 +49,17 @@ void draw(){
 
 
         joueur1.update();
+        joueur1.munitionUpdate(joueur1);
+        joueur2.munitionUpdate(joueur2);
 
         bullets1.showBullets();
-        bullets2.showBulletsP2();
-
-        joueur1.munitionUpdate(joueur1);
         joueur1.dessiner();
-        joueur2.munitionUpdate(joueur2);
+
+                bullets1.polygonPoint();
+
+        bullets2.showBulletsP2();
         joueur2.dessiner();
+        joueur2.update();
 
         fill(bgColor*3); strokeWeight(3); rect(mouseX, mouseY, 10, 10); //Curseur de la souris
 

@@ -11,10 +11,6 @@ class Munitions {
       ammoLeft=6,
       chargeRate=30;
 
-  int[][] zabaBullets = { {-1,0}, {1,0},
-          {-1,1}, {1,1},
-          {-1,2}, {1,2}};
-
   // ==================================================== //
   /*** Methods ***/
   Munitions(Types player_){       //constructor
