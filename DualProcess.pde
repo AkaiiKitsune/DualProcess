@@ -22,18 +22,15 @@ Bullets bullets1, bullets2; //Objets balles
     --> Boucle principale du programme*/
 void setup(){
         size(800, 1000); //Set la taille de la fenetre
-        background(0); //
-        noCursor();
-        stroke(0);
-        frameRate(60); // Slow it down a little
-        smooth(6);
+        background(0); //Set la couleur du background
+        noCursor(); //Empeche l'affichage du curseur
+        frameRate(60); //Set la vitesse de refresh du jeu
+        smooth(6); //Antialiasing
 
-        joueur1 = new Types("Zaba", true, color(150,120,120), width/2, 3*height/4, 50, 20);
-        joueur2 = new Types("Zaba", false, color(200), width/2, height/4, 50, 20);
-
-        bullets1 = new Bullets(20, joueur1);
-        bullets2 = new Bullets(20, joueur2);
-        //bullets2 = new Bullets(5, joueur2);
+        joueur1 = new Types("Zaba", true, color(150,120,120), width/2, 3*height/4, 50, 20); //Declare le joueur 1 : A BOUGER DANS LE LOBBY
+        joueur2 = new Types("Zaba", false, color(200), width/2, height/4, 50, 20); //Declare le joueur 2 : A BOUGER DANS LE LOBBY
+        bullets1 = new Bullets(20, joueur1); //Same as above
+        bullets2 = new Bullets(20, joueur2); //Again, same as above
 
         if(isOnline) {
                 background(color(100,50,50));
@@ -55,11 +52,11 @@ void draw(){
         bullets1.showBullets();
         joueur1.dessiner();
 
-                bullets1.polygonPoint();
+        bullets1.polygonPoint();
 
-        bullets2.showBulletsP2();
         joueur2.dessiner();
-        joueur2.update();
+        bullets2.showBulletsP2();
+
 
         fill(bgColor*3); strokeWeight(3); rect(mouseX, mouseY, 10, 10); //Curseur de la souris
 
@@ -87,6 +84,7 @@ void draw(){
 void updatePlayer2(String input){
         input = input.substring(0, input.indexOf("\n")); // Only up to the newline
         data = split(input, ' '); // Split values into an array
+
         bgColor = int(data[0]);
         joueur2.setPos(width - int(data[1]), //x
                        height - int(data[2]), //y

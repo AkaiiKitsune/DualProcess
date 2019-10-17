@@ -1,6 +1,7 @@
 // ==================================================== //
 class Types extends Players {
   /*** Attributes ***/
+  PVector[] vertices;
   String type;
   int colorPlayer;
 
@@ -30,20 +31,42 @@ class Types extends Players {
                   stroke(255);
                   strokeWeight(5);
                   fill(colorPlayer);
-
-                  pushMatrix();
-                  translate(position.x, position.y);
-                  rotate(radians(angle));
-                  rect(0, 0, size, size);
-                  line(size/4, 0, size/2, 0);
-                  popMatrix();
+                  vertices = new PVector[6];
+                  for(int i = 0; i<vertices.length; i++) vertices[i] = new PVector(rotatePoint(angle, zabaPoints[i]).x, rotatePoint(angle, zabaPoints[i]).y);
+                  beginShape(); for(int i = 0; i<4; i++) vertex(vertices[i].array()); endShape(CLOSE);
+                  line(vertices[4].x, vertices[4].y, vertices[5].x, vertices[5].y);
                   break;
 
           default:
+
                   break;
           }
   }
-  // Méthode animer : héritée, donc pas besoin de la réécrire
+
+  PVector rotatePoint(float angle_, PVector pos_){
+          PVector positionPoint = new PVector();
+          // player.position.x, player.position.y - center of square coordinates
+          // x, y - coordinates of a corner point of the square
+          // theta is the angle of rotation
+
+          // translate point to origin
+          float xc = position.x + pos_.x/2;
+          float yc = position.y + pos_.y/2;
+          float tempX = xc - position.x;
+          float tempY = yc - position.y;
+          angle_=radians(angle_);
+
+          // now apply rotation
+          float rotatedX = tempX*cos(angle_) - tempY*sin(angle_);
+          float rotatedY = tempX*sin(angle_) + tempY*cos(angle_);
+
+          // translate back
+          xc = rotatedX + position.x;
+          yc = rotatedY + position.y;
+
+          positionPoint.set(xc, yc);
+          return positionPoint;
+  }
 
   // ==================================================== //
   /*** Bullet Functions ***/
