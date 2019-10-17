@@ -52,7 +52,7 @@ class Types extends Players{
     switch(type){
       case "Zaba" :
       int temp=0;
-        for(int i = 0; i<=2; i++){
+        for(int i = 2; i>=0; i--){
           for(int j = 0; j<=2; j+=2){
             if(temp<ammoLeft) munitionDraw(i-1, j-1);
             temp++;

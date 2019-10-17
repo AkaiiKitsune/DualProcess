@@ -33,15 +33,13 @@ class Players {
     // float dy = mouseY + (1 - sin(a));
     // line(position.x, position.y, dx, dy);
 
-     angle = angleBetweenPV_PV(position, new PVector(mouseX, mouseY));
-     angle = degrees(angle);
+     angle = degrees(angleBetweenPV_PV(position, new PVector(mouseX, mouseY)));
 
-     if(position.y-size/2<=1 || position.y+size/2>=height) velocity.set(velocity.x,0);
+     if(position.y-size/2<=height/2 || position.y+size/2>=height) velocity.set(velocity.x,0);
      if(position.x-size/2<=0 || position.x+size/2>=width ) velocity.set(0,velocity.y);
 
-     position.set(constrain(position.x, 0+size/2, width-size/2), position.y);
-     if(!isPlayer)position.set(position.x, constrain(position.y, 0+size/2, (height/2)-size/2));
-     else position.set(position.x, constrain(position.y, (height/2)+size/2, height-size/2));
+     if(!isPlayer)position.set(constrain(position.x, 0+size/2, width-size/2), constrain(position.y, 0+size/2, (height/2)-size/2));
+     else position.set(constrain(position.x, 0+size/2, width-size/2), constrain(position.y, (height/2)+size/2, height-size/2));
    }
 
   float angleBetweenPV_PV(PVector a, PVector mousePV) {
@@ -61,7 +59,7 @@ class Players {
   void updatePosition(){
     acceleration.setMag(2);      // Set magnitude of acceleration
     velocity.add(acceleration);    // Velocity changes according to acceleration
-    velocity.set(velocity.x*(0.95),velocity.y*(0.95));
+    velocity.mult(0.95);
     velocity.limit(speed);         // Limit the velocity by topspeed
     position.add(velocity);        // Location changes by velocity
   }
