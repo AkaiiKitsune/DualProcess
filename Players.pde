@@ -1,11 +1,12 @@
 // ==================================================== //
 class Players {
   /*** Attributes ***/
-  PVector position, velocity, acceleration; //Vecteurs pour le deplacement du joueur.
-  boolean isLeft, isRight, isUp, isDown, isPlayer; //Booleens permettant de savoir si l'utilisateur appuie sur le clavier.
-  float x, y, speed, size, offset; //Variables utilisées pour l'affichage et les calculs de positions.
-  float angle=90;
-  String type; //Type du joueur.
+ //Player Attributes
+ PVector position, velocity, acceleration; //Vecteurs pour le deplacement du joueur.
+ boolean isLeft, isRight, isUp, isDown, isPlayer; //Booleens permettant de savoir si l'utilisateur appuie sur le clavier.
+ float x, y, speed, size, offset; //Variables utilisées pour l'affichage et les calculs de positions.
+ float angle=90;
+ String type; //Type du joueur.
 
   // ==================================================== //
   /*** Methods ***/
@@ -19,7 +20,7 @@ class Players {
   }
 
   // ==================================================== //
-  /*** Functions ***/
+  /*** Player Functions ***/
   void update() {
      y = (isDown ? 1 : 0) - (isUp ? 1 : 0);
      x = (isRight ? 1 : 0) - (isLeft ? 1 : 0);
@@ -27,21 +28,18 @@ class Players {
      acceleration.set(x,y);
      updatePosition();
 
-     // float a = PI - atan2(position.y - mouseY, position.x - mouseX);
-     // float dx = mouseX + (1 + cos(a));
-     // float dy = mouseY + (1 - sin(a));
+    // float a = PI - atan2(position.y - mouseY, position.x - mouseX);
+    // float dx = mouseX + (1 + cos(a));
+    // float dy = mouseY + (1 - sin(a));
+    // line(position.x, position.y, dx, dy);
 
-     angle = angleBetweenPV_PV(position, new PVector(mouseX, mouseY));
-     angle=degrees(angle);
+     angle = degrees(angleBetweenPV_PV(position, new PVector(mouseX, mouseY)));
 
-     //line(position.x, position.y, dx, dy);
-
-     if(position.y-size/2<=1 || position.y+size/2>=height) velocity.set(velocity.x,0);
+     if(position.y-size/2<=height/2 || position.y+size/2>=height) velocity.set(velocity.x,0);
      if(position.x-size/2<=0 || position.x+size/2>=width ) velocity.set(0,velocity.y);
 
-     position.set(constrain(position.x, 0+size/2, width-size/2), position.y);
-     if(!isPlayer)position.set(position.x, constrain(position.y, 0+size/2, (height/2)-size/2));
-     else position.set(position.x, constrain(position.y, (height/2)+size/2, height-size/2));
+     if(!isPlayer)position.set(constrain(position.x, 0+size/2, width-size/2), constrain(position.y, 0+size/2, (height/2)-size/2));
+     else position.set(constrain(position.x, 0+size/2, width-size/2), constrain(position.y, (height/2)+size/2, height-size/2));
    }
 
   float angleBetweenPV_PV(PVector a, PVector mousePV) {
@@ -61,7 +59,7 @@ class Players {
   void updatePosition(){
     acceleration.setMag(2);      // Set magnitude of acceleration
     velocity.add(acceleration);    // Velocity changes according to acceleration
-    velocity.set(velocity.x*(0.95),velocity.y*(0.95));
+    velocity.mult(0.95);
     velocity.limit(speed);         // Limit the velocity by topspeed
     position.add(velocity);        // Location changes by velocity
   }

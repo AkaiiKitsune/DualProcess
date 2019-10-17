@@ -1,19 +1,18 @@
-import processing.net.*;
+import processing.net.*; //Import network libs
+boolean holdingMouse, isServer, reset = false, isOnline=false; //Declaration des booleens
+int packetsLost, //Compteur de packets perdus
+    holdingTime, //Compeur de temps de mouse hold
+    packetsLostLimit=20; //Nombre maximum de packets perdus avant que la connection soit reset
+float bgColor=30; //Variable gerant la couleur du background
 
-boolean holdingMouse, isServer, reset = false,
-                      isOnline=true;
+Server server; //Objet serveur
+Client client; //Objet client
+String input = " ", //String reçu par le client;
+       data[]; //Tableau dans le quel les données reçues sont stoquées
 
-int packetsLost, holdingTime,
-                packetsLostLimit=20;
+Types joueur1, joueur2; //Objets joueurs
+Bullets bullets1, bullets2; //Objets balles
 
-float bgColor=30;
-
-Server server;
-Client client;
-
-Types joueur1, joueur2;
-Munitions joueur1M, joueur2M;
-String input = " ", data[];
 
 /* Main :
 /*=================================================================================
@@ -22,46 +21,51 @@ String input = " ", data[];
 ** void draw(){}
     --> Boucle principale du programme*/
 void setup(){
-  size(800, 1000);
-  background(204);
+  size(800, 1000); //Set la taille de la fenetre
+  background(0); //
+  noCursor();
   stroke(0);
   frameRate(60); // Slow it down a little
   smooth(6);
 
   joueur1 = new Types("Zaba", true, color(150,120,120), width/2, 3*height/4, 50, 20);
-  joueur1M = new Munitions(joueur1);
-
   joueur2 = new Types("Zaba", false, color(200), width/2, height/4, 50, 20);
-  joueur2M = new Munitions(joueur2);
+
+  bullets1 = new Bullets(20, joueur1);
+  bullets2 = new Bullets(20, joueur2);
+  //bullets2 = new Bullets(5, joueur2);
 
   if(isOnline){
+    background(color(100,50,50));
     connect(reset);
-      if(isServer){
-    }
   }
 }
 
 void draw(){
-  drawBackground(50, 5, bgColor);
-  if(bgColor>20)bgColor*=0.95;
+  drawBackground(50, 5, bgColor); //Affiche le background
+  if(bgColor>5)bgColor*=0.95; //Decremente la valeur de la couleur du background, donne de l'effet
 
-  joueur1.dessiner();
-  joueur1M.dessiner();
+  if(holdingMouse && mouseButton == RIGHT){holdingTime++; joueur1.hold(holdingTime, false, bullets1);}  //Tir droit maintenu
+
+
   joueur1.update();
 
+  bullets1.showBullets();
+  bullets2.showBulletsP2();
 
+  joueur1.munitionUpdate(joueur1);
+  joueur1.dessiner();
+  joueur2.munitionUpdate(joueur2);
   joueur2.dessiner();
-  joueur2M.dessiner();
 
-  rect(mouseX, mouseY, 10, 10); //Curseur de la souris
+  fill(bgColor*3); strokeWeight(3); rect(mouseX, mouseY, 10, 10); //Curseur de la souris
 
-  if(holdingMouse){holdingTime++; joueur1M.hold(holdingTime, false);}
-
+  //Multiplayer
   if(isOnline) send(int(bgColor) + " " +
                     int(joueur1.position.x) + " " +
                     int(joueur1.position.y) + " " +
                     int(180+joueur1.angle) + " " +
-                    int(joueur1M.ammoLeft) + "\n");
+                    int(joueur1.ammoLeft) + "\n");
 }
 /*=================================================================================*/
 
@@ -84,8 +88,8 @@ void updatePlayer2(String input){
   joueur2.setPos(width - int(data[1]), //x
                  height - int(data[2]), //y
                  int(data[3])); //angle
-  joueur2M.ammoLeft = int(data[4]); //Balles
-  joueur2M.dessiner(); //Draw le joueur 2
+  joueur2.ammoLeft = int(data[4]); //Balles
+  joueur2.dessiner(); //Draw le joueur 2
 }
 
 void drawBackground(int bgGridScale, int bgScale, float bgColor){
@@ -121,17 +125,8 @@ void drawBackground(int bgGridScale, int bgScale, float bgColor){
     --> Une touche viens d'etre relachée ?*/
 void keyPressed()  {joueur1.setMove(keyCode, true) ;} //utilisé pour la detection des touches.
 void keyReleased() {joueur1.setMove(keyCode, false);} //utilisé pour la detection des touches.
-void mousePressed() {
-  holdingMouse=true;
-  if(mouseButton == LEFT){
-    joueur1M.shoot(false); println("click");
-  }
-}
-void mouseReleased() {
-    holdingMouse=false;
-    joueur1M.hold(holdingTime, true);
-    holdingTime=0;
-}
+void mousePressed() {  holdingMouse=true;if(mouseButton == LEFT){joueur1.shoot(false, bullets1);}}
+void mouseReleased() {holdingMouse=false;joueur1.hold(holdingTime, true, bullets1);holdingTime=0;}
 /*=================================================================================*/
 
 
@@ -175,7 +170,6 @@ void connect(boolean reset){
     println("Connected to " + client.ip());
   }
 }
-
 boolean send(String str){
     if(packetsLost>packetsLostLimit){
       println("Instable connection, lost connection.");
@@ -198,7 +192,6 @@ boolean send(String str){
   packetsLost++;
   return false;
 }
-
 boolean serverSend(String str){
     server.write(str);
 
@@ -212,7 +205,6 @@ boolean serverSend(String str){
     return false;
   }
 }
-
 boolean clientSend(String str){
   client.write(str);
 

@@ -17,7 +17,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/AkaiiKitsune/DualProcess">
-    <img src="images/logo.png" alt="Logo" width="108" height="72">
+    <img src="images/logo.png" alt="Logo" width="108" height="68">
   </a>
 
   <h3 align="center">Dual! Processing</h3>
@@ -41,10 +41,9 @@
 
 * [A propos du projet](#a-propos-du-projet)
   * [IDE et software](#ide-et-software)
-* [Installation](#executer-le-programme)
+* [Executer le programme](#executer-le-programme)
 * [Mapping des touches](#mapping-des-touches)
 * [Contact](#contact)
-* [Acknowledgements](#acknowledgements)
 
 
 
