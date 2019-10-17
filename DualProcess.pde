@@ -1,7 +1,7 @@
 import processing.net.*;
 
 boolean holdingMouse, isServer, reset = false,
-                      isOnline=false;
+                      isOnline=true;
 
 int packetsLost, holdingTime,
                 packetsLostLimit=20;
@@ -26,7 +26,7 @@ void setup(){
   background(204);
   stroke(0);
   frameRate(60); // Slow it down a little
-  smooth(4);
+  smooth(6);
 
   joueur1 = new Types("Zaba", true, color(150,120,120), width/2, 3*height/4, 50, 20);
   joueur1M = new Munitions(joueur1);
@@ -43,7 +43,7 @@ void setup(){
 
 void draw(){
   drawBackground(50, 5, bgColor);
-  if(bgColor>5)bgColor*=0.95;
+  if(bgColor>20)bgColor*=0.95;
 
   joueur1.dessiner();
   joueur1M.dessiner();
