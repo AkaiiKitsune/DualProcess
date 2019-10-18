@@ -1,7 +1,6 @@
-// ==================================================== //
+  // ==================================================== //
 class Types extends Players {
   /*** Attributes ***/
-  PVector[] vertices;
   String type;
   int colorPlayer;
 
@@ -12,6 +11,8 @@ class Types extends Players {
   int chargeRate=30;
 
   int tirs=0;
+
+  PVector[] vertices;
 
   // ==================================================== //
   /*** Methods ***/
@@ -25,14 +26,17 @@ class Types extends Players {
   // ==================================================== //
   /*** Functions ***/
   void dessiner(){       //Draws the player
+          //Set la couleur, le contour, et l'epaisseur du joueur
+          stroke(255);
+          strokeWeight(5);
+          fill(colorPlayer);
+
+          //Calcule les positions des coins du joueur
+          PVector[] vertices = calcVertices();
+
           switch(type) {
           case "Zaba":
-                  rectMode(CENTER);
-                  stroke(255);
-                  strokeWeight(5);
-                  fill(colorPlayer);
-                  vertices = new PVector[6];
-                  for(int i = 0; i<vertices.length; i++) vertices[i] = new PVector(rotatePoint(angle, zabaPoints[i]).x, rotatePoint(angle, zabaPoints[i]).y);
+                  //Dessine le joueur
                   beginShape(); for(int i = 0; i<4; i++) vertex(vertices[i].array()); endShape(CLOSE);
                   line(vertices[4].x, vertices[4].y, vertices[5].x, vertices[5].y);
                   break;
@@ -43,41 +47,22 @@ class Types extends Players {
           }
   }
 
-  PVector rotatePoint(float angle_, PVector pos_){
-          PVector positionPoint = new PVector();
-          // player.position.x, player.position.y - center of square coordinates
-          // x, y - coordinates of a corner point of the square
-          // theta is the angle of rotation
-
-          // translate point to origin
-          float xc = position.x + pos_.x/2;
-          float yc = position.y + pos_.y/2;
-          float tempX = xc - position.x;
-          float tempY = yc - position.y;
-          angle_=radians(angle_);
-
-          // now apply rotation
-          float rotatedX = tempX*cos(angle_) - tempY*sin(angle_);
-          float rotatedY = tempX*sin(angle_) + tempY*cos(angle_);
-
-          // translate back
-          xc = rotatedX + position.x;
-          yc = rotatedY + position.y;
-
-          positionPoint.set(xc, yc);
-          return positionPoint;
+  PVector[] calcVertices(){
+          PVector[] vertices = new PVector[6];
+          for(int i = 0; i<vertices.length; i++) vertices[i] = new PVector(rotatePoint(angle, zabaPoints[i], position).x, rotatePoint(angle, zabaPoints[i], position).y);
+          return vertices;
   }
 
   // ==================================================== //
   /*** Bullet Functions ***/
-  void munitionUpdate(Types joueur){
+  void munitionDraw(Types joueur){
           type=joueur.type;
           switch(type) {
           case "Zaba":
                   int temp=0;
                   for(int i = 2; i>=0; i--) {
                           for(int j = 0; j<=2; j+=2) {
-                                  if(temp<ammoLeft) munitionDraw(i-1, j-1);
+                                  if(temp<ammoLeft) munitionDrawInternal(i-1, j-1);
                                   temp++;
                           }
                   }
@@ -89,13 +74,13 @@ class Types extends Players {
           }
   }
 
-  void munitionDraw(int i, float j){
+  void munitionDrawInternal(int i, float j){
           strokeWeight(0);
           fill(255); //A rendre generique
 
           pushMatrix();
           translate(position.x, position.y);
-          rotate(radians(angle));
+          rotate(angle);
           rect(i*20, j*40, 15, 15); //A rendre generique
           popMatrix();
   }
