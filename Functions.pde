@@ -84,7 +84,6 @@ void mousePressed() { //La souris est maintenue
         holdingMouse=true; //Booleen modifié
         if(mouseButton == LEFT) joueur1.shoot(false, bullets1); //Si le click est un click gauche, prepare l'attaque lourde
 }
-
 void mouseReleased() { //La souris est relachée
         holdingMouse=false; //Reset du booleen
         joueur1.hold(holdingTime, true, bullets1); //Tir puissant

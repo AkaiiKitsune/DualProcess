@@ -49,20 +49,20 @@ void setPos(int x_, int y_, int a_){
 
 boolean setMove(int k, boolean b) {     //Permet de verifier si plusieurs touches sont appuiées en même temps.
         switch (k) {
-        case 'Z':
-        case UP:   //Fleche du haut ou Z appuyé.
+        case 'Z': //Fleche du haut ou Z appuyé.
+        case UP:
                 return isUp = b;
 
-        case 'S':
-        case DOWN:   //Fleche du bas ou S appuyé.
+        case 'S':  //Fleche du bas ou S appuyé.
+        case DOWN:
                 return isDown = b;
 
-        case 'Q':
-        case LEFT:   //Fleche de gauche ou Q appuyé.
+        case 'Q': //Fleche de gauche ou Q appuyé.
+        case LEFT:
                 return isLeft = b;
 
-        case 'D':
-        case RIGHT:   //Fleche de droite ou D appuyé.
+        case 'D': //Fleche de droite ou D appuyé.
+        case RIGHT:
                 return isRight = b;
 
         default:
