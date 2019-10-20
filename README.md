@@ -79,7 +79,8 @@ Pour executer ce programme, il vous suffit de telecharger les fichiers.pde et de
 <!-- USAGE EXAMPLES -->
 ## Mapping des touches
 
-Ce jeu s'utilise avec les touches zqsd et les fleches dirctionelles. La visée se fait par la souris et le tir s'effectue avec un click gauche. Un tir chargé peut avoir lieu si vous maintenez le click.
+Ce jeu s'utilise avec les touches zqsd et les fleches dirctionelles. 
+La visée se fait par la souris et le tir s'effectue avec un clic gauche.
 
 
 
