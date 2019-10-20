@@ -1,9 +1,17 @@
-      // Fonctions Utiles
+// Fonctions Utiles
 //=======================================================================================================================
 /* **void updatePlayer2(String input){}
     --> Update la position du joueur2.
     String input : Requete raw envoyée par le serveur / client, elle y sera parsée et convertie en INT
-*/
+ */
+void shoot(){
+
+}
+
+void cursor(){
+        fill(bgColor*3); stroke(255); strokeWeight(3); rect(mouseX, mouseY, 10, 10);   //Curseur de la souris
+}
+
 void updatePlayer2(String input){
         input = input.substring(0, input.indexOf("\n")); // Only up to the newline
         data = split(input, ' '); // Split values into an array
@@ -18,7 +26,7 @@ void updatePlayer2(String input){
 
 /* **void drawBackground(){}
    --> Affiche le background et l'ui du jeu.
-*/
+ */
 void drawBackground(int bgGridScale, int bgScale, float bgColor){
         background(0);
         strokeWeight(2);
@@ -44,7 +52,7 @@ void drawBackground(int bgGridScale, int bgScale, float bgColor){
 
 /* **float angleBetweenPV_PV(PVector a, PVector mousePV){}
    --> Calcule l'angle entre la souris et un vecteur
-*/
+ */
 float angleBetweenPV_PV(PVector a, PVector mousePV) {
         PVector d = new PVector();
         // calc angle
@@ -72,28 +80,32 @@ PVector rotatePoint(float angle_, PVector pos_, PVector ref_){
 
 
 
-      // Intéraction :
+// Intéraction :
 //=======================================================================================================================
 void keyPressed()  { //Utilisé pour la detection des touches
+        if(!game) {
+                if(keyCode == LEFT || keyCode == RIGHT) isOnline=!isOnline;
+                return;
+        }
         joueur1.setMove(keyCode, true);
 }
 void keyReleased() { //Utilisé pour la detection des touches
+        if(!game) return;
         joueur1.setMove(keyCode, false);
 }
 void mousePressed() { //La souris est maintenue
-        holdingMouse=true; //Booleen modifié
-        if(mouseButton == LEFT) joueur1.shoot(false, bullets1); //Si le click est un click gauche, prepare l'attaque lourde
+        holdingMouse=true;
 }
 void mouseReleased() { //La souris est relachée
         holdingMouse=false; //Reset du booleen
-        joueur1.hold(holdingTime, true, bullets1); //Tir puissant
+        if(game) joueur1.shoot(bullets1);
         holdingTime=0; //Reset du temps de maintien
 }
 //=======================================================================================================================
 
 
 
-      // Networking :
+// Networking :
 //=======================================================================================================================
 /* ** void connect(boolean reset){}
    --> determine si l'app doit se lancer en client ou en serveur, puis initialise les connections
@@ -188,77 +200,77 @@ boolean clientSend(String str){
 
 
 /* Collisions :
-//=======================================================================================================================
+   //=======================================================================================================================
  ** boolean connect(polyPoly(PVector[] p1, PVector[] p2){}
  ** boolean polyLine(PVector[] p2, float x1, float y1, float x2, float y2){}
  ** boolean lineLine(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4){}
  */
 boolean polyPoly(PVector[] p1, PVector[] p2) { //aled
 
-  // go through each of the vertices, plus the next
-  // vertex in the list
-  int next = 0;
-  for (int current=0; current<p1.length; current++) {
+        // go through each of the vertices, plus the next
+        // vertex in the list
+        int next = 0;
+        for (int current=0; current<p1.length; current++) {
 
-    // get next vertex in list
-    // if we've hit the end, wrap around to 0
-    next = current+1;
-    if (next == p1.length) next = 0;
+                // get next vertex in list
+                // if we've hit the end, wrap around to 0
+                next = current+1;
+                if (next == p1.length) next = 0;
 
-    // get the PVectors at our current position
-    // this makes our if statement a little cleaner
-    PVector vc = p1[current];    // c for "current"
-    PVector vn = p1[next];       // n for "next"
+                // get the PVectors at our current position
+                // this makes our if statement a little cleaner
+                PVector vc = p1[current]; // c for "current"
+                PVector vn = p1[next]; // n for "next"
 
-    // now we can use these two points (a line) to compare
-    // to the other polygon's vertices using polyLine()
-    boolean collision = polyLine(p2, vc.x,vc.y,vn.x,vn.y);
-    if (collision) return true;
-  }
+                // now we can use these two points (a line) to compare
+                // to the other polygon's vertices using polyLine()
+                boolean collision = polyLine(p2, vc.x,vc.y,vn.x,vn.y);
+                if (collision) return true;
+        }
 
-  return false;
+        return false;
 }
 boolean polyLine(PVector[] p2, float x1, float y1, float x2, float y2) { //vraiment, a l'aide
 
-  // go through each of the vertices, plus the next
-  // vertex in the list
-  int next = 0;
-  for (int current=0; current<p2.length; current++) {
+        // go through each of the vertices, plus the next
+        // vertex in the list
+        int next = 0;
+        for (int current=0; current<p2.length; current++) {
 
-    // get next vertex in list
-    // if we've hit the end, wrap around to 0
-    next = current+1;
-    if (next == p2.length) next = 0;
+                // get next vertex in list
+                // if we've hit the end, wrap around to 0
+                next = current+1;
+                if (next == p2.length) next = 0;
 
-    // get the PVectors at our current position
-    // extract X/Y coordinates from each
-    float x3 = p2[current].x;
-    float y3 = p2[current].y;
-    float x4 = p2[next].x;
-    float y4 = p2[next].y;
+                // get the PVectors at our current position
+                // extract X/Y coordinates from each
+                float x3 = p2[current].x;
+                float y3 = p2[current].y;
+                float x4 = p2[next].x;
+                float y4 = p2[next].y;
 
-    // do a Line/Line comparison
-    // if true, return 'true' immediately and
-    // stop testing (faster)
-    boolean hit = lineLine(x1, y1, x2, y2, x3, y3, x4, y4);
-    if (hit) {
-      return true;
-    }
-  }
+                // do a Line/Line comparison
+                // if true, return 'true' immediately and
+                // stop testing (faster)
+                boolean hit = lineLine(x1, y1, x2, y2, x3, y3, x4, y4);
+                if (hit) {
+                        return true;
+                }
+        }
 
-  // never got a hit
-  return false;
+        // never got a hit
+        return false;
 }
 boolean lineLine(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4) { //envoyez la police
 
-  // calculate the direction of the lines
-  float uA = ((x4-x3)*(y1-y3) - (y4-y3)*(x1-x3)) / ((y4-y3)*(x2-x1) - (x4-x3)*(y2-y1));
-  float uB = ((x2-x1)*(y1-y3) - (y2-y1)*(x1-x3)) / ((y4-y3)*(x2-x1) - (x4-x3)*(y2-y1));
+        // calculate the direction of the lines
+        float uA = ((x4-x3)*(y1-y3) - (y4-y3)*(x1-x3)) / ((y4-y3)*(x2-x1) - (x4-x3)*(y2-y1));
+        float uB = ((x2-x1)*(y1-y3) - (y2-y1)*(x1-x3)) / ((y4-y3)*(x2-x1) - (x4-x3)*(y2-y1));
 
-  // if uA and uB are between 0-1, lines are colliding
-  if (uA >= 0 && uA <= 1 && uB >= 0 && uB <= 1) {
-    return true;
-  }
-  return false;
+        // if uA and uB are between 0-1, lines are colliding
+        if (uA >= 0 && uA <= 1 && uB >= 0 && uB <= 1) {
+                return true;
+        }
+        return false;
 }
 //=======================================================================================================================

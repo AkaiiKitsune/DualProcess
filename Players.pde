@@ -2,25 +2,32 @@ class Players {
 /*** Attributes ***/
 //Player Attributes
 PVector position, velocity, acceleration;    //Vecteurs pour le deplacement du joueur.
-boolean isLeft, isRight, isUp, isDown, isPlayer;    //Booleens permettant de savoir si l'utilisateur appuie sur le clavier.
-float x, y, speed, size, offset;    //Variables utilisées pour l'affichage et les calculs de positions.
+boolean isLeft, isRight, isUp, isDown;    //Booleens permettant de savoir si l'utilisateur appuie sur le clavier.
+float x, y, speed, size;    //Variables utilisées pour l'affichage et les calculs de positions.
 float angle=PI/2;
+float life;
+
 String type;    //Type du joueur.
 
-PVector[] zabaPoints = new PVector[6];
+PVector[] playerPoints = new PVector[6];
 
 //=======================================================================================================================
 /*** Methods ***/
-Players(String type_, boolean isPlayer_, int colorPlayer, float x_, float y_, float size_, float speed_){         //constructor
+Players(String type_, int colorPlayer, float x_, float y_, float size_, float speed_){         //constructor
         acceleration = new PVector(0.0, 0.0);     //Initialise le vecteur acceleration
         position = new PVector(x_, y_);     //Initialise le vecteur position
         velocity = new PVector(0,0);     //Initialise le vecteur vélocité
-        isPlayer = isPlayer_;
         speed = speed_;     //Initialise la variable vitesse max
         size = size_;     //Initialise la taille du joueur
 
-        zabaPoints[0] = new PVector( size, size);zabaPoints[1] = new PVector( size,-size);zabaPoints[2] = new PVector(-size,-size);
-        zabaPoints[3] = new PVector(-size, size);zabaPoints[4] = new PVector( size, 0   );zabaPoints[5] = new PVector( size/2, 0 );
+        playerPoints[0] = new PVector( size, size); playerPoints[1] = new PVector( size,-size); playerPoints[2] = new PVector(-size,-size);
+        playerPoints[3] = new PVector(-size, size); playerPoints[4] = new PVector( size, 0   ); playerPoints[5] = new PVector( size/2, 0 );
+
+        switch(type_) {
+        case "Zaba":
+                life = 100;
+                break;
+        }
 }
 
 //=======================================================================================================================
@@ -39,8 +46,6 @@ void update() {
         if(position.x-size/2<=0 || position.x+size/2>=width ) velocity.set(0,velocity.y);
         position.set(constrain(position.x, 0+size/2, width-size/2), constrain(position.y, (height/2)+size/2, height-size/2));
 }
-
-
 
 void setPos(int x_, int y_, int a_){
         position.set(x_, y_);
