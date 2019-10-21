@@ -38,7 +38,7 @@ void dessiner(){         //Draws the player
         fill(color(red(colorPlayer)*(life/100), green(colorPlayer)*(life/100), blue(colorPlayer)*(life/100)));
 
         //Calcule les positions des coins du joueur
-        PVector[] vertices = calcVertices();
+        PVector[] vertices = calcVertices(6, playerPoints, angle, position);
 
         switch(type) {
         case "Zaba":
@@ -53,11 +53,6 @@ void dessiner(){         //Draws the player
         }
 }
 
-PVector[] calcVertices(){ //TO MAKE GENERIC !
-        PVector[] vertices = new PVector[6];
-        for(int i = 0; i<vertices.length; i++) vertices[i] = new PVector(rotatePoint(angle, playerPoints[i], position).x, rotatePoint(angle, playerPoints[i], position).y);
-        return vertices;
-}
 
 // ==================================================== //
 /*** Bullet Functions ***/

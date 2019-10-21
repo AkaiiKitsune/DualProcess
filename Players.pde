@@ -47,7 +47,7 @@ void update() {
         position.set(constrain(position.x, 0+size/2, width-size/2), constrain(position.y, (height/2)+size/2, height-size/2));
 }
 
-void setPos(int x_, int y_, int a_){
+void setPos(int x_, int y_, float a_){
         position.set(x_, y_);
         angle = a_;
 }

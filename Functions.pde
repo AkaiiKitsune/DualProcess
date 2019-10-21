@@ -1,29 +1,37 @@
 // Fonctions Utiles
 //=======================================================================================================================
+void cursor(){
+        fill(bgColor*3); stroke(255); strokeWeight(3); rect(mouseX, mouseY, 10, 10);   //Curseur de la souris
+}
 /* **void updatePlayer2(String input){}
     --> Update la position du joueur2.
     String input : Requete raw envoyée par le serveur / client, elle y sera parsée et convertie en INT
  */
-void shoot(){
-
-}
-
-void cursor(){
-        fill(bgColor*3); stroke(255); strokeWeight(3); rect(mouseX, mouseY, 10, 10);   //Curseur de la souris
-}
-
 void updatePlayer2(String input){
         input = input.substring(0, input.indexOf("\n")); // Only up to the newline
-        data = split(input, ' '); // Split values into an array
+        data = split(input, '|'); // Split values into an array
 
         bgColor = int(data[0]);
         joueur2.setPos(width - int(data[1]), //x
                        height - int(data[2]), //y
-                       int(data[3])); //angle
+                       float(data[3])/100000); //angle
         joueur2.ammoLeft = int(data[4]); //Balles
-        joueur2.dessiner(); //Draw le joueur 2
-}
 
+        data = split(data[5], ';');         // Split values into an array
+        if(data.length>2) {
+                for(int i = 0; i<data.length-1; i++) {
+                        //println("Coordinates for bullet : " + data[i]);
+                        coordinates = split(data[i], ',');
+                        int x = int(coordinates[0]);
+                        int y = int(coordinates[1]);
+                        float angle = float(coordinates[2]);
+                        int size = int(coordinates[3]);
+                        //println("Coordinates for bullet " + i + " : x:" + x + ", y:" + y + ", z:" + angle);
+                        bullets2.bullets[i] = new PVector(width-x, height-y, angle+PI);
+                        bullets2.bulletAngleSizeDamage[i].x = size;
+                }
+        }
+}
 /* **void drawBackground(){}
    --> Affiche le background et l'ui du jeu.
  */
@@ -49,7 +57,13 @@ void drawBackground(int bgGridScale, int bgScale, float bgColor){
         strokeWeight(10);
         line(0, height/2, width, height/2);
 }
+//=======================================================================================================================
 
+
+
+
+// Maths
+//=======================================================================================================================
 /* **float angleBetweenPV_PV(PVector a, PVector mousePV){}
    --> Calcule l'angle entre la souris et un vecteur
  */
@@ -66,7 +80,6 @@ float angleBetweenPV_PV(PVector a, PVector mousePV) {
         popMatrix();
         return angle1;
 }
-
 PVector rotatePoint(float angle_, PVector pos_, PVector ref_){
         PVector positionPoint = new PVector();
         float xc = ref_.x + pos_.x/2;
@@ -76,7 +89,13 @@ PVector rotatePoint(float angle_, PVector pos_, PVector ref_){
 
         return positionPoint;
 }
+PVector[] calcVertices(int nbr_, PVector[] points_, float angle, PVector position){
+        PVector[] vertices = new PVector[nbr_];
+        for(int i = 0; i<vertices.length; i++) vertices[i] = new PVector(rotatePoint(angle, points_[i], position).x, rotatePoint(angle, points_[i], position).y);
+        return vertices;
+}
 //=======================================================================================================================
+
 
 
 
@@ -105,6 +124,7 @@ void mouseReleased() { //La souris est relachée
 
 
 
+
 // Networking :
 //=======================================================================================================================
 /* ** void connect(boolean reset){}
@@ -129,14 +149,13 @@ void connect(boolean reset){
                 server = new Server(this, 12345); // Start a simple server on a port
                 println("Server started on " + server.ip() + ", Waiting for client...");
 
-                while(!serverSend("arg0 arg1 arg2 arg3 arg4"+"\n")) {
+                while(!serverSend("arg0|arg1|arg2|arg3|arg4|arg5"+"\n")) {
                         delay(100);
                 }
 
                 println("Connected to " + client.ip());
         }
 }
-
 /* ** boolean send(String str){}
    --> permet d'envoyer les données
    String str : permet de passer les variables*/
@@ -162,7 +181,6 @@ boolean send(String str){
         packetsLost++;
         return false;
 }
-
 /* ** boolean serverSend(String str){}
    --> envoye les données au client
    String str : permet de passer les variables*/
@@ -179,7 +197,6 @@ boolean serverSend(String str){
                 return false;
         }
 }
-
 /* ** boolean clientSend(String str){}
     --> envoye les données au serveur
     String str : permet de passer les variables*/
@@ -196,6 +213,7 @@ boolean clientSend(String str){
         }
 }
 //=======================================================================================================================
+
 
 
 

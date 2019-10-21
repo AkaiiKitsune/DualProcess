@@ -8,7 +8,7 @@ float bgColor=5; //Variable gerant la couleur du background
 Server server; //Objet serveur
 Client client; //Objet client
 String input = " ", //String reçu par le client;
-       data[]; //Tableau dans le quel les données reçues sont stoquées
+       data[], coordinates[]; //Tableau dans le quel les données reçues sont stoquées
 
 PImage s_duel, s_duel_fill, s_duel_header;
 PFont font;
@@ -64,19 +64,19 @@ void game(){
         joueur1.munitionDraw(joueur1);
         joueur2.munitionDraw(joueur2);
 
-
-
         bullets1.updateBullets();
+        bullets2.updateBullets();
 
         joueur1.dessiner();
         joueur2.dessiner();
 
         //Multiplayer
-        if(isOnline) send(int(bgColor) + " " +
-                          int(joueur1.position.x) + " " +
-                          int(joueur1.position.y) + " " +
-                          int(180+joueur1.angle) + " " +
-                          int(joueur1.ammoLeft) + "\n");
+        if(isOnline) send(int(bgColor) + "|" +
+                          int(joueur1.position.x) + "|" +
+                          int(joueur1.position.y) + "|" +
+                          int((joueur1.angle+PI)*100000) + "|" +
+                          int(joueur1.ammoLeft) + "|" +
+                          bullets1.serialize( )+ "|" + "\n");
 }
 
 void lobby(){
