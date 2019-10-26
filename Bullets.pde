@@ -10,6 +10,7 @@ PVector[] targets;
 PVector[] bulletAngleSizeDamage;
 PVector[] vertices;
 PVector[] zabaBallPoints = new PVector[4];
+PVector[] osloBallPoints = new PVector[8];
 
 PVector bullet;
 
@@ -35,7 +36,7 @@ Bullets(int maxBullets_, Types player_, Types player2_){       //constructor
 
 // ==================================================== //
 /*** Functions ***/
-boolean isHitting() {//PVector[] vertices, float px, float py
+boolean isHitting(String type) {//PVector[] vertices, float px, float py
         boolean hit = polyPoly(vertices, calcVertices(6, player2.playerPoints, player2.angle, player2.position));
         if (hit) {
                 bullet.set(5e5, 5e5);
@@ -48,9 +49,9 @@ void spitFire(int speed_, int charge_) {
         bulletsIdx=(bulletsIdx + 1) % maxBullets; // Incremente la table stoquant les balles
         bullets[bulletsIdx].set(player.position.x, player.position.y, player.angle); // Set la position de la balle a la position du joueur
 
-        bulletAngleSizeDamage[bulletsIdx].set((15+(1* charge_*5)), (charge_)*16.67);
+        bulletAngleSizeDamage[bulletsIdx].set((15+((charge_-1)*5)), (charge_)*16.67);
 
-        println("Projectile has damage : " + bulletAngleSizeDamage[bulletsIdx].z);
+        println("Projectile has damage : " + bulletAngleSizeDamage[bulletsIdx].y);
 
         PVector t = targets[bulletsIdx]; // Vise la souris
         t.set( PVector.sub(new PVector(mouseX, mouseY), player.position) ); // Calcule la direction de la trajectoire de la balle
@@ -58,55 +59,45 @@ void spitFire(int speed_, int charge_) {
         t.mult(speed_); // Multiplie le vecteur par la vitesse de la balle
 }
 
-float[] updateBullets() {
+void updateBullets(String type) {
         strokeWeight(0);
         fill(255);
         boolean hit=false;
-        float damage=0;
         float tempDamage;
 
         for (int i = 0; i != maxBullets;) {
                 bullet = bullets[i];
-
                 size = bulletAngleSizeDamage[i].x;
                 tempDamage = bulletAngleSizeDamage[i].y;
                 angle = bullet.z;
 
                 bullet.add(targets[i++]); // updates
 
-                zabaBallPoints[0] = new PVector( size, size);
-                zabaBallPoints[1] = new PVector( size,-size);
-                zabaBallPoints[2] = new PVector(-size,-size);
-                zabaBallPoints[3] = new PVector(-size, size);
+                switch(type) {
+                case "Zaba":
+                        zabaBallPoints[0] = new PVector( size, size);
+                        zabaBallPoints[1] = new PVector( size,-size);
+                        zabaBallPoints[2] = new PVector(-size,-size);
+                        zabaBallPoints[3] = new PVector(-size, size);
 
-                vertices = new PVector[4];
-                for(int j = 0; j<vertices.length; j++)
-                        vertices[j] = new PVector(rotatePoint(angle, zabaBallPoints[j], bullet).x,
-                                                  rotatePoint(angle, zabaBallPoints[j], bullet).y);
+                        vertices = new PVector[4];
+                        for(int j = 0; j<vertices.length; j++)
+                                vertices[j] = new PVector(rotatePoint(angle, zabaBallPoints[j], bullet).x,
+                                                          rotatePoint(angle, zabaBallPoints[j], bullet).y);
 
-                beginShape();
-                for(int k = 0; k<4; k++) {
-                        vertex(vertices[k].array());
+                        beginShape();
+                        for(int k = 0; k<4; k++) {
+                                vertex(vertices[k].array());
+                        }
+                        endShape(CLOSE);
+                        break;
                 }
-                endShape(CLOSE);
 
-
-                if(isHitting()) {
-                        hit=true;
-                        damage=tempDamage;
-                        println("Damage done : " + damage);
+                if(isHitting(type)) {
+                        player2.life -= tempDamage;
+                        println("Damage done : " + tempDamage);
+                        println("Player2's life : " + player2.life);
                 }
         }
-        return new float[] { hit ? 1 : 0, damage};
-}
-
-String serialize(){
-        String bulletsString = "";
-        for (int i = 0; i != maxBullets;) {
-                bulletsString += (bullets[i].x +","+ bullets[i].y +","+ bullets[i].z +","+ bulletAngleSizeDamage[i].x +";");
-                i++;
-        }
-        //println("Sent : " + bulletsString);
-        return bulletsString;
 }
 }

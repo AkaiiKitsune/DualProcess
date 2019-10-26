@@ -11,6 +11,7 @@ int ammoLeft=6;
 int chargeRate=30;
 
 int tirs=0;
+int tempReload=0;
 
 PVector[] vertices;
 
@@ -46,9 +47,9 @@ void dessiner(){         //Draws the player
                 beginShape(); for(int i = 0; i<4; i++) vertex(vertices[i].array()); endShape(CLOSE);
                 line(vertices[4].x, vertices[4].y, vertices[5].x, vertices[5].y);
                 break;
-
-        default:
-
+        case "Oslo":
+                ellipse(position.x, position.y, size, size);
+                line(vertices[4].x, vertices[4].y, vertices[5].x, vertices[5].y);
                 break;
         }
 }
@@ -93,12 +94,19 @@ void hold(int holdingTime_){
         }
 }
 
+void reload(){
+  tempReload++;
+  if (tempReload > chargeRate*1.5 && ammoLeft<maxCharge && !holdingMouse) { ammoLeft++; tempReload=0;}
+}
+
 void shoot(Bullets bullets_){
         print("Shoot");
-        if(ammoLeft>0 || charge>1) {
-                println(" with charge : "+ charge);
+        bgColor+=charge*20;
+        if(ammoLeft>0 || charge>=1) {
+                println(" with charge : "+ charge+", has "+ammoLeft+" ammos left");
                 bullets_.spitFire(25,charge);
                 charge=0;
+                tempReload=0;
         } else println(" failed : no ammo left");
 }
 }

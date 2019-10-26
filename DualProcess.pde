@@ -1,14 +1,7 @@
 import processing.net.*; //Import network libs
-boolean holdingMouse, isServer, game, reset = false, isOnline=false; //Declaration des booleens
-int packetsLost, //Compteur de packets perdus
-    holdingTime, //Compeur de temps de mouse hold
-    packetsLostLimit=20; //Nombre maximum de packets perdus avant que la connection soit reset
+boolean holdingMouse, game; //Declaration des booleens
+int holdingTime; //Compeur de temps de mouse hold
 float bgColor=5; //Variable gerant la couleur du background
-
-Server server; //Objet serveur
-Client client; //Objet client
-String input = " ", //String reçu par le client;
-       data[], coordinates[]; //Tableau dans le quel les données reçues sont stoquées
 
 PImage s_duel, s_duel_fill, s_duel_header;
 PFont font;
@@ -49,7 +42,8 @@ void setup(){
 
 void draw(){
         if(!game) lobby();
-        else game();
+        else if(game) game();
+        else endGame();
         cursor();
 }
 
@@ -60,23 +54,32 @@ void game(){
 
 
         drawBackground(50, 5, bgColor);   //Affiche le background
-        joueur1.update();
-        joueur1.munitionDraw(joueur1);
-        joueur2.munitionDraw(joueur2);
 
-        bullets1.updateBullets();
-        bullets2.updateBullets();
+        bullets1.updateBullets(joueur1.type);
+        bullets2.updateBullets(joueur2.type);
+
+        joueur1.update();
+
+        joueur1.reload();
+        joueur1.munitionDraw(joueur1);
+        joueur2.reload();
+        joueur2.munitionDraw(joueur2);
 
         joueur1.dessiner();
         joueur2.dessiner();
 
-        //Multiplayer
-        if(isOnline) send(int(bgColor) + "|" +
-                          int(joueur1.position.x) + "|" +
-                          int(joueur1.position.y) + "|" +
-                          int((joueur1.angle+PI)*100000) + "|" +
-                          int(joueur1.ammoLeft) + "|" +
-                          bullets1.serialize( )+ "|" + "\n");
+        if(joueur1.life < 0 || joueur2.life < 0) {
+                game=false;
+                if(joueur1.life<0) {
+                        println("Player 2 won");
+                }else if(joueur2.life<0) {
+                        println("Player 1 won");
+                }
+        }
+}
+
+void endGame(){
+        int temp=0;
 }
 
 void lobby(){
@@ -99,22 +102,15 @@ void lobby(){
         image(s_duel_header, (width/2)-(400/2), (height/3-(99/2)), 400, 99);
 
         textSize(32);
-        if(isOnline) text("<  ONLINE MODE  >", width/2, height/1.45);
-        else text("<  OFFLINE MODE  >", width/2, height/1.45);
         text("HOLD SPACE TO CONTINUE", width/2, height/1.35);
 
-        if(s_duel_fill.height*1.2<animTemp) game=!game;
+        if(s_duel_fill.height*1.2<animTemp) game=true;
 
         if(game) {
                 joueur1 = new Types("Zaba", true, color(150,120,120), width/2, 3*height/4, 50, 20); //Declare le joueur 1 : A BOUGER DANS LE LOBBY
                 joueur2 = new Types("Zaba", false, color(200), width/2, height/4, 50, 20); //Declare le joueur 2 : A BOUGER DANS LE LOBBY
                 bullets1 = new Bullets(20, joueur1, joueur2); //Same as above
                 bullets2 = new Bullets(20, joueur2, joueur1); //Again, same as above
-
-                if(isOnline) {
-                        background(color(100,50,50));
-                        connect(reset);
-                }
         }
 }
 //=======================================================================================================================

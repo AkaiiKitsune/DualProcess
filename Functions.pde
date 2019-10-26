@@ -3,35 +3,6 @@
 void cursor(){
         fill(bgColor*3); stroke(255); strokeWeight(3); rect(mouseX, mouseY, 10, 10);   //Curseur de la souris
 }
-/* **void updatePlayer2(String input){}
-    --> Update la position du joueur2.
-    String input : Requete raw envoyée par le serveur / client, elle y sera parsée et convertie en INT
- */
-void updatePlayer2(String input){
-        input = input.substring(0, input.indexOf("\n")); // Only up to the newline
-        data = split(input, '|'); // Split values into an array
-
-        bgColor = int(data[0]);
-        joueur2.setPos(width - int(data[1]), //x
-                       height - int(data[2]), //y
-                       float(data[3])/100000); //angle
-        joueur2.ammoLeft = int(data[4]); //Balles
-
-        data = split(data[5], ';');         // Split values into an array
-        if(data.length>2) {
-                for(int i = 0; i<data.length-1; i++) {
-                        //println("Coordinates for bullet : " + data[i]);
-                        coordinates = split(data[i], ',');
-                        int x = int(coordinates[0]);
-                        int y = int(coordinates[1]);
-                        float angle = float(coordinates[2]);
-                        int size = int(coordinates[3]);
-                        //println("Coordinates for bullet " + i + " : x:" + x + ", y:" + y + ", z:" + angle);
-                        bullets2.bullets[i] = new PVector(width-x, height-y, angle+PI);
-                        bullets2.bulletAngleSizeDamage[i].x = size;
-                }
-        }
-}
 /* **void drawBackground(){}
    --> Affiche le background et l'ui du jeu.
  */
@@ -102,15 +73,10 @@ PVector[] calcVertices(int nbr_, PVector[] points_, float angle, PVector positio
 // Intéraction :
 //=======================================================================================================================
 void keyPressed()  { //Utilisé pour la detection des touches
-        if(!game) {
-                if(keyCode == LEFT || keyCode == RIGHT) isOnline=!isOnline;
-                return;
-        }
-        joueur1.setMove(keyCode, true);
+        if(game) joueur1.setMove(keyCode, true);
 }
 void keyReleased() { //Utilisé pour la detection des touches
-        if(!game) return;
-        joueur1.setMove(keyCode, false);
+        if(game) joueur1.setMove(keyCode, false);
 }
 void mousePressed() { //La souris est maintenue
         holdingMouse=true;
@@ -121,99 +87,6 @@ void mouseReleased() { //La souris est relachée
         holdingTime=0; //Reset du temps de maintien
 }
 //=======================================================================================================================
-
-
-
-
-// Networking :
-//=======================================================================================================================
-/* ** void connect(boolean reset){}
-   --> determine si l'app doit se lancer en client ou en serveur, puis initialise les connections
-   boolean reset : permet de specifier si le client/serveur doit reset une ancienne connection.*/
-void connect(boolean reset){
-        packetsLost=0;
-        if(reset) {
-                if(isServer) server.stop();
-                else client.stop();
-        }
-        println("About to try to connect...");//client
-        client = new Client(this, "127.0.0.1", 12345); // Connection to localhost
-        println("Is client connected ?");
-        if(client.active()) {
-                println("Yes, connected to " + client.ip() + ", starting main loop.");
-                isServer=false;
-        }else{
-                println("No, entering server mode.");
-                isServer=true;
-                client.stop();
-                server = new Server(this, 12345); // Start a simple server on a port
-                println("Server started on " + server.ip() + ", Waiting for client...");
-
-                while(!serverSend("arg0|arg1|arg2|arg3|arg4|arg5"+"\n")) {
-                        delay(100);
-                }
-
-                println("Connected to " + client.ip());
-        }
-}
-/* ** boolean send(String str){}
-   --> permet d'envoyer les données
-   String str : permet de passer les variables*/
-boolean send(String str){
-        if(packetsLost>packetsLostLimit) {
-                println("Instable connection, lost connection.");
-                reset = true;
-                setup();
-                draw();
-        }
-        if(isServer) {
-                if(serverSend(str)) {
-                        if(packetsLost>0) packetsLost--;
-                        return true;
-                }
-        }else{
-                if(clientSend(str)) {
-                        if(packetsLost>0) packetsLost--;
-                        return true;
-                }
-        }
-        println("Packet Lost");
-        packetsLost++;
-        return false;
-}
-/* ** boolean serverSend(String str){}
-   --> envoye les données au client
-   String str : permet de passer les variables*/
-boolean serverSend(String str){
-        server.write(str);
-
-        // Receive data from client
-        client = server.available();
-        if (client != null) {
-                input = client.readString();
-                updatePlayer2(input);
-                return true;
-        }else{
-                return false;
-        }
-}
-/* ** boolean clientSend(String str){}
-    --> envoye les données au serveur
-    String str : permet de passer les variables*/
-boolean clientSend(String str){
-        client.write(str);
-
-        // Receive data from server
-        if (client.available() > 0) {
-                input = client.readString();
-                updatePlayer2(input);
-                return true;
-        }else{
-                return false;
-        }
-}
-//=======================================================================================================================
-
 
 
 

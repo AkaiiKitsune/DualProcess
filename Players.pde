@@ -5,7 +5,7 @@ PVector position, velocity, acceleration;    //Vecteurs pour le deplacement du j
 boolean isLeft, isRight, isUp, isDown;    //Booleens permettant de savoir si l'utilisateur appuie sur le clavier.
 float x, y, speed, size;    //Variables utilisées pour l'affichage et les calculs de positions.
 float angle=PI/2;
-float life;
+float life=100;
 
 String type;    //Type du joueur.
 
@@ -22,12 +22,6 @@ Players(String type_, int colorPlayer, float x_, float y_, float size_, float sp
 
         playerPoints[0] = new PVector( size, size); playerPoints[1] = new PVector( size,-size); playerPoints[2] = new PVector(-size,-size);
         playerPoints[3] = new PVector(-size, size); playerPoints[4] = new PVector( size, 0   ); playerPoints[5] = new PVector( size/2, 0 );
-
-        switch(type_) {
-        case "Zaba":
-                life = 100;
-                break;
-        }
 }
 
 //=======================================================================================================================
