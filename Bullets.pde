@@ -1,5 +1,3 @@
-//http://studio.sketchpad.cc/sp/pad/view/ro.91nVQMnL$v06L/latest
-
 class Bullets {
 /*** Attributes ***/
 Types player, player2;
@@ -44,7 +42,6 @@ boolean isHitting(String type) {//PVector[] vertices, float px, float py
         }
         return false;
 }
-
 void spitFire(int speed_, int charge_) {
         bulletsIdx=(bulletsIdx + 1) % maxBullets; // Incremente la table stoquant les balles
         bullets[bulletsIdx].set(player.position.x, player.position.y, player.angle); // Set la position de la balle a la position du joueur
@@ -58,7 +55,6 @@ void spitFire(int speed_, int charge_) {
         t.normalize(); // Normalise le vecteur direction
         t.mult(speed_); // Multiplie le vecteur par la vitesse de la balle
 }
-
 void updateBullets(String type) {
         strokeWeight(0);
         fill(255);

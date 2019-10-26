@@ -39,14 +39,12 @@ void setup(){
         lobby();
         rectMode(CENTER);
 }
-
 void draw(){
         if(!game) lobby();
         else if(game) game();
         else endGame();
         cursor();
 }
-
 void game(){
         if(bgColor>5) bgColor*=0.95;   //Decremente la valeur de la couleur du background, donne de l'effet
 
@@ -77,11 +75,9 @@ void game(){
                 }
         }
 }
-
 void endGame(){
         int temp=0;
 }
-
 void lobby(){
         background(color(239, 44, 107));
 

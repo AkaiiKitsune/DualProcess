@@ -40,12 +40,6 @@ void update() {
         if(position.x-size/2<=0 || position.x+size/2>=width ) velocity.set(0,velocity.y);
         position.set(constrain(position.x, 0+size/2, width-size/2), constrain(position.y, (height/2)+size/2, height-size/2));
 }
-
-void setPos(int x_, int y_, float a_){
-        position.set(x_, y_);
-        angle = a_;
-}
-
 boolean setMove(int k, boolean b) {     //Permet de verifier si plusieurs touches sont appuiées en même temps.
         switch (k) {
         case 'Z': //Fleche du haut ou Z appuyé.

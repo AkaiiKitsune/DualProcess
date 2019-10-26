@@ -54,7 +54,6 @@ void dessiner(){         //Draws the player
         }
 }
 
-
 // ==================================================== //
 /*** Bullet Functions ***/
 void munitionDraw(Types joueur){
@@ -73,9 +72,8 @@ void munitionDraw(Types joueur){
         default:
                 //Should not happen
                 break;
-        }
+        } //A rendre generique
 }
-
 void munitionDrawInternal(int i, float j){
         strokeWeight(0);
         fill(255);   //A rendre generique
@@ -84,21 +82,14 @@ void munitionDrawInternal(int i, float j){
         translate(position.x, position.y);
         rotate(angle);
         rect(i*20, j*40, 15, 15);   //A rendre generique
-        popMatrix();
+        popMatrix(); //A rendre generique
 }
-
 void hold(int holdingTime_){
         if(ammoLeft>0 && holdingTime_>charge*chargeRate && charge < maxCharge) {
                 charge++; ammoLeft--;
                 println("Charge level : " +charge);
         }
 }
-
-void reload(){
-  tempReload++;
-  if (tempReload > chargeRate*1.5 && ammoLeft<maxCharge && !holdingMouse) { ammoLeft++; tempReload=0;}
-}
-
 void shoot(Bullets bullets_){
         print("Shoot");
         bgColor+=charge*20;
@@ -108,5 +99,9 @@ void shoot(Bullets bullets_){
                 charge=0;
                 tempReload=0;
         } else println(" failed : no ammo left");
+}
+void reload(){
+  tempReload++;
+  if (tempReload > chargeRate*1.5 && ammoLeft<maxCharge && !holdingMouse) { ammoLeft++; tempReload=0;}
 }
 }
