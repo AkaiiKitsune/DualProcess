@@ -10,6 +10,8 @@ int animTemp=0;
 Types joueur1, joueur2; //Objets joueurs
 Bullets bullets1, bullets2; //Objets balles
 
+boolean ready=false;
+
 
 /* Main :
    //=======================================================================================================================
@@ -23,6 +25,8 @@ void setup(){
         noCursor(); //Empeche l'affichage du curseur
         smooth(6); //Antialiasing
         textAlign(CENTER);
+        frameRate(80);
+        //frameRate(30);
 
         s_duel = loadImage("images/s_duel.png");
         s_duel.resize(600, 156);
@@ -67,6 +71,18 @@ void game(){
         joueur1.dessiner();
         joueur2.dessiner();
 
+        // animTemp++;
+        // if(animTemp>60){
+        //   ready=true;
+        // }
+
+        if(ready){
+          animTemp=0;
+          ready = false;
+          joueur2.hold(15);
+          joueur2.shoot(bullets2, joueur2.target);
+        }
+
         if(joueur1.life < 0 || joueur2.life < 0) {
                 game=false;
                 if(joueur1.life<0) {
@@ -104,8 +120,8 @@ void lobby(){
         if(s_duel_fill.height*1.2<animTemp) game=true;
 
         if(game) {
-                joueur1 = new Types("Zaba", true, color(150,120,120), width/2, 3*height/4, 50, 20); //Declare le joueur 1 : A BOUGER DANS LE LOBBY
-                joueur2 = new Types("Zaba", false, color(200), width/2, height/4, 50, 20); //Declare le joueur 2 : A BOUGER DANS LE LOBBY
+                joueur1 = new Types("Zaba", true, color(150,120,120), width/2, 3*height/4, 50, 15); //Declare le joueur 1 : A BOUGER DANS LE LOBBY
+                joueur2 = new Types("Zaba", false, color(200), width/2, height/4, 50, 15); //Declare le joueur 2 : A BOUGER DANS LE LOBBY
                 bullets1 = new Bullets(20, joueur1, joueur2); //Same as above
                 bullets2 = new Bullets(20, joueur2, joueur1); //Again, same as above
         }

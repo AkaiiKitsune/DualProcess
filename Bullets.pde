@@ -42,7 +42,7 @@ boolean isHitting(String type) {//PVector[] vertices, float px, float py
         }
         return false;
 }
-void spitFire(int speed_, int charge_) {
+void spitFire(int speed_, int charge_, PVector target) {
         bulletsIdx=(bulletsIdx + 1) % maxBullets; // Incremente la table stoquant les balles
         bullets[bulletsIdx].set(player.position.x, player.position.y, player.angle); // Set la position de la balle a la position du joueur
 
@@ -51,7 +51,7 @@ void spitFire(int speed_, int charge_) {
         println("Projectile has damage : " + bulletAngleSizeDamage[bulletsIdx].y);
 
         PVector t = targets[bulletsIdx]; // Vise la souris
-        t.set( PVector.sub(new PVector(mouseX, mouseY), player.position) ); // Calcule la direction de la trajectoire de la balle
+        t.set( PVector.sub(target, player.position) ); // Calcule la direction de la trajectoire de la balle
         t.normalize(); // Normalise le vecteur direction
         t.mult(speed_); // Multiplie le vecteur par la vitesse de la balle
 }

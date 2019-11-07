@@ -8,7 +8,7 @@ int colorPlayer;
 int charge=0;
 int maxCharge=6;
 int ammoLeft=6;
-int chargeRate=30;
+int chargeRate=20;
 
 int tirs=0;
 int tempReload=0;
@@ -90,12 +90,12 @@ void hold(int holdingTime_){
                 println("Charge level : " +charge);
         }
 }
-void shoot(Bullets bullets_){
+void shoot(Bullets bullets_, PVector target){
         print("Shoot");
         bgColor+=charge*20;
         if(ammoLeft>0 || charge>=1) {
                 println(" with charge : "+ charge+", has "+ammoLeft+" ammos left");
-                bullets_.spitFire(25,charge);
+                bullets_.spitFire(15,charge, target);
                 charge=0;
                 tempReload=0;
         } else println(" failed : no ammo left");

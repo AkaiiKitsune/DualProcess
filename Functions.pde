@@ -79,7 +79,7 @@ void mousePressed() { //La souris est maintenue
 }
 void mouseReleased() { //La souris est relachée
         holdingMouse=false; //Reset du booleen
-        if(game) joueur1.shoot(bullets1);
+        if(game) joueur1.shoot(bullets1, new PVector(mouseX, mouseY));
         holdingTime=0; //Reset du temps de maintien
 }
 //=======================================================================================================================

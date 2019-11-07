@@ -3,9 +3,11 @@ class Players {
 //Player Attributes
 PVector position, velocity, acceleration;    //Vecteurs pour le deplacement du joueur.
 boolean isLeft, isRight, isUp, isDown;    //Booleens permettant de savoir si l'utilisateur appuie sur le clavier.
-float x, y, speed, size;    //Variables utilisées pour l'affichage et les calculs de positions.
+float x, y, speed, size, tx, ty;    //Variables utilisées pour l'affichage et les calculs de positions.
 float angle=PI/2;
 float life=100;
+PVector correction = new PVector(19, 19);
+PVector target;
 
 String type;    //Type du joueur.
 
@@ -36,14 +38,29 @@ void updatePlayer() {
 }
 
 void updateAi(Players player1){
-        angle = angleBetweenPV_PV(position, new PVector(player1.position.x, player1.position.y));
+        float distance = dist(player1.position.x, player1.position.y, position.x, position.y);
+
+        if(player1.acceleration.x !=0)  correction.x = distance*0.1-6;
+        else if(correction.x>19) correction.x*=0.95;
+
+        tx = player1.position.x+(player1.velocity.x*correction.x);
+        ty = player1.position.y+(player1.velocity.y*correction.y);
+
+        target = new PVector(constrain(tx, 0+(size/2), width-(size/2)), constrain(ty, (height/2)+(size/2), height-(size/2)));
+
+        fill(color(255,100,100));
+        ellipse(joueur2.target.x, joueur2.target.y,10,10);
+        line(joueur1.position.x, joueur1.position.y, tx, ty);
+        line(position.x, position.y, target.x, target.y);
+
+        angle = angleBetweenPV_PV(position, new PVector(target.x, target.y));
         if(position.y-size/2<=0 || position.y+size/2>=height/2) velocity.set(velocity.x,0);
         if(position.x-size/2<=0 || position.x+size/2>=width ) velocity.set(0,velocity.y);
         updateMove(false);
 }
 
 void updateMove(boolean isPlayer){
-        acceleration.setMag(2); // Set la magnitude de l'acceleration
+        acceleration.setMag(.75); // Set la magnitude de l'acceleration
         velocity.add(acceleration); // Ajout du vecteur acceleration au vecteur velocité
         velocity.mult(0.95); // Amortissement de la velocité au fil du temps
         velocity.limit(speed); // Limite la vitesse max du joueur
