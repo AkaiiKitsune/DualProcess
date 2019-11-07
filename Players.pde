@@ -26,20 +26,32 @@ Players(String type_, int colorPlayer, float x_, float y_, float size_, float sp
 
 //=======================================================================================================================
 /*** Player Functions ***/
-void update() {
-        acceleration.set((isRight ? 1 : 0)-(isLeft ? 1 : 0),  //Convertis les booleens en int pout permettre-
-                         (isDown  ? 1 : 0)-(isUp   ? 1 : 0)); // -De definir le sens du vecteur acceleration
-        acceleration.setMag(2);       // Set la magnitude de l'acceleration
-        velocity.add(acceleration);   // Ajout du vecteur acceleration au vecteur velocité
-        velocity.mult(0.95);          // Amortissement de la velocité au fil du temps
-        velocity.limit(speed);        // Limite la vitesse max du joueur
-        position.add(velocity);       // Update la position du joueur en ajoutant le vecteur velocité au vecteur position
-        angle = angleBetweenPV_PV(position, new PVector(mouseX, mouseY)); //Calcule
-
+void updatePlayer() {
+        acceleration.set((isRight ? 1 : 0)-(isLeft ? 1 : 0),         //Convertis les booleens en int pout permettre-
+                         (isDown  ? 1 : 0)-(isUp   ? 1 : 0));        // -De definir le sens du vecteur acceleration
+        angle = angleBetweenPV_PV(position, new PVector(mouseX, mouseY));         //Calcule
         if(position.y-size/2<=height/2 || position.y+size/2>=height) velocity.set(velocity.x,0);
         if(position.x-size/2<=0 || position.x+size/2>=width ) velocity.set(0,velocity.y);
-        position.set(constrain(position.x, 0+size/2, width-size/2), constrain(position.y, (height/2)+size/2, height-size/2));
+        updateMove(true);
 }
+
+void updateAi(Players player1){
+        angle = angleBetweenPV_PV(position, new PVector(player1.position.x, player1.position.y));
+        if(position.y-size/2<=0 || position.y+size/2>=height/2) velocity.set(velocity.x,0);
+        if(position.x-size/2<=0 || position.x+size/2>=width ) velocity.set(0,velocity.y);
+        updateMove(false);
+}
+
+void updateMove(boolean isPlayer){
+        acceleration.setMag(2); // Set la magnitude de l'acceleration
+        velocity.add(acceleration); // Ajout du vecteur acceleration au vecteur velocité
+        velocity.mult(0.95); // Amortissement de la velocité au fil du temps
+        velocity.limit(speed); // Limite la vitesse max du joueur
+        position.add(velocity); // Update la position du joueur en ajoutant le vecteur velocité au vecteur position
+        if(isPlayer) position.set(constrain(position.x, 0+size/2, width-size/2), constrain(position.y, (height/2)+size/2, height-size/2));
+        else position.set(constrain(position.x, 0+size/2, width-size/2), constrain(position.y, size/2, (height/2)+size/2));
+}
+
 boolean setMove(int k, boolean b) {     //Permet de verifier si plusieurs touches sont appuiées en même temps.
         switch (k) {
         case 'Z': //Fleche du haut ou Z appuyé.

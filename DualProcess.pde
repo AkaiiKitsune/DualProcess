@@ -56,7 +56,8 @@ void game(){
         bullets1.updateBullets(joueur1.type);
         bullets2.updateBullets(joueur2.type);
 
-        joueur1.update();
+        joueur1.updatePlayer();
+        joueur2.updateAi(joueur1);
 
         joueur1.reload();
         joueur1.munitionDraw(joueur1);
