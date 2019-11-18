@@ -9,6 +9,7 @@ int charge=0;
 int maxCharge=6;
 int ammoLeft=6;
 int chargeRate=20;
+boolean aiShoot=true;
 
 int tirs=0;
 int tempReload=0;
@@ -85,6 +86,7 @@ void munitionDrawInternal(int i, float j){
         popMatrix(); //A rendre generique
 }
 void hold(int holdingTime_){
+        aiShoot=true;
         if(ammoLeft>0 && holdingTime_>charge*chargeRate && charge < maxCharge) {
                 charge++; ammoLeft--;
                 println("Charge level : " +charge);
@@ -92,6 +94,7 @@ void hold(int holdingTime_){
 }
 void shoot(Bullets bullets_, PVector target){
         print("Shoot");
+        aiShoot=false;
         bgColor+=charge*20;
         if(ammoLeft>0 || charge>=1) {
                 println(" with charge : "+ charge+", has "+ammoLeft+" ammos left");
@@ -100,8 +103,8 @@ void shoot(Bullets bullets_, PVector target){
                 tempReload=0;
         } else println(" failed : no ammo left");
 }
-void reload(){
+void reload(boolean noReload){
   tempReload++;
-  if (tempReload > chargeRate*1.5 && ammoLeft<maxCharge && !holdingMouse) { ammoLeft++; tempReload=0;}
+  if (tempReload > chargeRate*1.5 && ammoLeft<maxCharge && !noReload) { ammoLeft++; tempReload=0;}
 }
 }

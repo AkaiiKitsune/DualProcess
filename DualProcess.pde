@@ -2,6 +2,7 @@ import processing.net.*; //Import network libs
 boolean holdingMouse, game; //Declaration des booleens
 int holdingTime; //Compeur de temps de mouse hold
 float bgColor=5; //Variable gerant la couleur du background
+boolean debug=false;
 
 PImage s_duel, s_duel_fill, s_duel_header;
 PFont font;
@@ -25,8 +26,8 @@ void setup(){
         noCursor(); //Empeche l'affichage du curseur
         smooth(6); //Antialiasing
         textAlign(CENTER);
-        frameRate(80);
-        //frameRate(30);
+        frameRate(60); //Full speed
+        //frameRate(30); //Debug
 
         s_duel = loadImage("images/s_duel.png");
         s_duel.resize(600, 156);
@@ -63,31 +64,19 @@ void game(){
         joueur1.updatePlayer();
         joueur2.updateAi(joueur1);
 
-        joueur1.reload();
+        joueur1.reload(holdingMouse);
         joueur1.munitionDraw(joueur1);
-        joueur2.reload();
+        joueur2.reload(joueur2.aiShoot);
         joueur2.munitionDraw(joueur2);
 
         joueur1.dessiner();
         joueur2.dessiner();
 
-        // animTemp++;
-        // if(animTemp>60){
-        //   ready=true;
-        // }
-
-        if(ready){
-          animTemp=0;
-          ready = false;
-          joueur2.hold(15);
-          joueur2.shoot(bullets2, joueur2.target);
-        }
-
         if(joueur1.life < 0 || joueur2.life < 0) {
                 game=false;
                 if(joueur1.life<0) {
                         println("Player 2 won");
-                }else if(joueur2.life<0) {
+                } else if(joueur2.life<0) {
                         println("Player 1 won");
                 }
         }
