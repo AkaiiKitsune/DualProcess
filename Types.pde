@@ -8,8 +8,9 @@ int colorPlayer;
 int charge=0;
 int maxCharge=6;
 int ammoLeft=6;
-int chargeRate=20;
+int chargeRate=15;
 boolean aiShoot=true;
+float speed;
 
 int tirs=0;
 int tempReload=0;
@@ -23,9 +24,10 @@ Types(String type_, boolean isPlayer_, int colorPlayer_, float x_, float y_, flo
         colorPlayer = colorPlayer_;
         type = type_;
         size = size_;
+        speed = speed_;
 
 
-        println("Init " + (isPlayer_ ? "player" : "ennemy")
+        if(debug) println("Init " + (isPlayer_ ? "player" : "ennemy")
                 +" as type " + type_
                 +", at x=" + x_ + ", y=" + y
                 +", using color " +red(colorPlayer) +","+green(colorPlayer)+","+blue(colorPlayer));
@@ -89,19 +91,19 @@ void hold(int holdingTime_){
         aiShoot=true;
         if(ammoLeft>0 && holdingTime_>charge*chargeRate && charge < maxCharge) {
                 charge++; ammoLeft--;
-                println("Charge level : " +charge);
+                if(debug) println("Charge level : " +charge);
         }
 }
 void shoot(Bullets bullets_, PVector target){
-        print("Shoot");
+        if(debug) print("Shoot");
         aiShoot=false;
         bgColor+=charge*20;
         if(ammoLeft>0 || charge>=1) {
-                println(" with charge : "+ charge+", has "+ammoLeft+" ammos left");
-                bullets_.spitFire(15,charge, target);
+                if(debug) println(" with charge : "+ charge+", has "+ammoLeft+" ammos left");
+                bullets_.spitFire(speed ,charge, target);
                 charge=0;
                 tempReload=0;
-        } else println(" failed : no ammo left");
+        } else if(debug) println(" failed : no ammo left");
 }
 void reload(boolean noReload){
   tempReload++;
