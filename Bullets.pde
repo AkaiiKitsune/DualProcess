@@ -37,7 +37,7 @@ Bullets(int maxBullets_, Types player_, Types player2_){       //constructor
 boolean isHitting(String type) {//PVector[] vertices, float px, float py
         boolean hit = polyPoly(vertices, calcVertices(6, player2.playerPoints, player2.angle, player2.position));
         if (hit) {
-                bullet.set(5e5, 5e5);
+                bullet.set(5e5, 5e5); //Fait partir les balles tres loin de l'aire de jeu
                 return true;
         }
         return false;
@@ -55,7 +55,7 @@ void spitFire(float speed_, int charge_, PVector target) {
         t.normalize(); // Normalise le vecteur direction
         t.mult(speed_); // Multiplie le vecteur par la vitesse de la balle
 }
-void updateBullets(String type) {
+void updateBullets(String type) { //Mise a jour des positions des balles
         strokeWeight(0);
         fill(255);
         boolean hit=false;
@@ -70,11 +70,11 @@ void updateBullets(String type) {
                 bullet.add(targets[i++]); // updates
 
                 switch(type) {
-                case "Zaba":
+                case "Zaba": //A termes il y aura d'autres types de joueurs, faites pas attention au cases qui se baladent un peu partout dans le code :)
                         zabaBallPoints[0] = new PVector( size, size);
                         zabaBallPoints[1] = new PVector( size,-size);
                         zabaBallPoints[2] = new PVector(-size,-size);
-                        zabaBallPoints[3] = new PVector(-size, size);
+                        zabaBallPoints[3] = new PVector(-size, size); //alors c'est pas beau, mais j'ai pas trouvé mieux
 
                         vertices = new PVector[4];
                         for(int j = 0; j<vertices.length; j++)

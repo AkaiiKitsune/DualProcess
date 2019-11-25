@@ -1,3 +1,72 @@
+//Ce fichier contient toutes les fonctions universelles du jeu.
+
+// Game loop + lobbys:
+//=======================================================================================================================
+void game(){
+        if(bgColor>5) bgColor*=0.95;   //Decremente la valeur de la couleur du background, donne de l'effet
+
+        if(holdingMouse) {holdingTime++; joueur1.hold(holdingTime);}   //Tir droit maintenu du joueur 1
+
+
+        drawBackground(50, 5, bgColor);   //Affiche le background
+
+        bullets1.updateBullets(joueur1.type); //Mise à jour des balles pour le joueur 1
+        bullets2.updateBullets(joueur2.type); //Mise à jour des balles pour le joueur 2
+
+        joueur1.updatePlayer(); //Mise à jour de la position du joueur 1
+        joueur2.updateAi(joueur1); //Mise à jour de la position du joueur 2 en mode AI
+
+        joueur1.reload(holdingMouse); //Gere le reload du joueur 1
+        joueur1.munitionDraw(); //Gere l'affichage des munitions du joueur 1
+        joueur2.reload(joueur2.aiShoot); //Gere le reload du joueur 2
+        joueur2.munitionDraw(); //Gere l'affichage des munitions du joueur 2
+
+        joueur1.dessiner(); //Affiche le joueur 1
+        joueur2.dessiner(); //Affiche le joueur 2
+
+        if(joueur1.life < 0 || joueur2.life < 0) { //Teste si la vie d'un des deux joueurs est nulle
+                game=false; //Quite la game loop
+                if(joueur1.life<0) {
+                        if(debug) println("Player 2 won");
+                } else if(joueur2.life<0) {
+                        if(debug) println("Player 1 won");
+                }
+        }
+}
+void endGame(){ //Pas codé... oupsi :)
+        int temp=0; //Oooooopsiiiii
+}
+void lobby(){ //Lobby (ce commentaire est très utile, oui oui)
+        background(color(239, 44, 107)); //ROUGE :)
+
+        if(keyPressed && (key == ' ' || key == ENTER)) { //Si la touche appuiée est ESPACE ou Entrée...
+                animTemp+=8; //Incrémente la valeur de l'animation
+        }else if(animTemp>0) animTemp *=.9; //Sinon, la reduit jusqu'a 0 de façon exponencielle (c'est plus joli)
+
+        tint(255); //Contours blancs
+        image(s_duel_fill.get(0, 0, s_duel_fill.width, animTemp), width/2-s_duel_fill.width/2, height/2-s_duel_fill.height/2); //Affiche le remplissage du logo en fonction de animTemp
+        image(s_duel, width/2-s_duel.width/2, height/2-s_duel.height/2, s_duel.width, s_duel.height); //Affiche le logo
+
+        tint(40, 40, 40, 100); //Gris
+        fill(40, 40, 40, 100);
+        image(s_duel_header, (width/2)-(400/2), (height/3-(99/2)), 400, 99); //Petit dessin joli au dessus du logo
+
+        textSize(32);
+        text("HOLD SPACE OR ENTER TO CONTINUE", width/2, height/1.35);
+
+        if(s_duel_fill.height*1.2<animTemp) game=true; //si animTemp est superieur a un certain threshold : lance le jeu
+
+        if(game) { //Set des objets pour le jeu
+                joueur1 = new Types("Zaba", true, color(150,120,120), width/2, 3*height/4, 50, 20); //Declare le joueur 1 : A BOUGER DANS LE LOBBY
+                joueur2 = new Types("Zaba", false, color(200), width/2, height/4, 50, 20); //Declare le joueur 2 : A BOUGER DANS LE LOBBY
+                bullets1 = new Bullets(20, joueur1, joueur2); //Same as above
+                bullets2 = new Bullets(20, joueur2, joueur1); //Again, same as above
+        }
+}
+//=======================================================================================================================
+
+
+
 // Fonctions Utiles
 //=======================================================================================================================
 void cursor(){
@@ -6,14 +75,14 @@ void cursor(){
 /* **void drawBackground(){}
    --> Affiche le background et l'ui du jeu.
  */
-void drawBackground(int bgGridScale, int bgScale, float bgColor){
+void drawBackground(int bgGridScale, int bgScale, float bgColor){ //Affichage du background
         background(0);
         strokeWeight(2);
         stroke(bgColor);
-        fill(0);
+        fill(0); //Des sets sans importance
 
         float x_, y_;
-        for(int x = 0; x < width*1.2; x += bgGridScale) {
+        for(int x = 0; x < width*1.2; x += bgGridScale) { //Affiche la grille de petits carrés blancs à l'arriere du terrain de jeu
                 for(int y = 0; y < height*1.2; y += bgGridScale) {
                         y_ = y-((joueur1.position.y)*0.1);
                         x_ = x-((joueur1.position.x)*0.1);
@@ -26,9 +95,10 @@ void drawBackground(int bgGridScale, int bgScale, float bgColor){
 
         stroke(255);
         strokeWeight(10);
-        line(0, height/2, width, height/2);
+        line(0, height/2, width, height/2); //Ligne du centre du terrain
 }
 //=======================================================================================================================
+
 
 
 // Maths
@@ -36,7 +106,7 @@ void drawBackground(int bgGridScale, int bgScale, float bgColor){
 /* **float angleBetweenPV_PV(PVector a, PVector mousePV){}
    --> Calcule l'angle entre la souris et un vecteur
  */
-float angleBetweenPV_PV(PVector a, PVector mousePV) {
+float angleBetweenPV_PV(PVector a, PVector mousePV) { //Permet de calculer un angle entre deux vecteurs
         PVector d = new PVector();
         // calc angle
         pushMatrix();
@@ -49,7 +119,13 @@ float angleBetweenPV_PV(PVector a, PVector mousePV) {
         popMatrix();
         return angle1;
 }
-PVector rotatePoint(float angle_, PVector pos_, PVector ref_){
+PVector[] calcVertices(int nbr_, PVector[] points_, float angle, PVector position){ //Permet de calculer la position des points d'une shape en fonction de son angle
+        PVector[] vertices = new PVector[nbr_];
+        for(int i = 0; i<vertices.length; i++) vertices[i] = new PVector(rotatePoint(angle, points_[i], position).x,
+                                                                         rotatePoint(angle, points_[i], position).y);
+        return vertices;
+}
+PVector rotatePoint(float angle_, PVector pos_, PVector ref_){ //Permet d'afficher un vecteur en fonction d'un angle
         PVector positionPoint = new PVector();
         float xc = ref_.x + pos_.x/2;
         float yc = ref_.y + pos_.y/2;
@@ -58,12 +134,8 @@ PVector rotatePoint(float angle_, PVector pos_, PVector ref_){
 
         return positionPoint;
 }
-PVector[] calcVertices(int nbr_, PVector[] points_, float angle, PVector position){
-        PVector[] vertices = new PVector[nbr_];
-        for(int i = 0; i<vertices.length; i++) vertices[i] = new PVector(rotatePoint(angle, points_[i], position).x, rotatePoint(angle, points_[i], position).y);
-        return vertices;
-}
 //=======================================================================================================================
+
 
 
 // Intéraction :
@@ -85,6 +157,7 @@ void mouseReleased() { //La souris est relachée
 //=======================================================================================================================
 
 
+
 /* Collisions :
    //=======================================================================================================================
  ** boolean connect(polyPoly(PVector[] p1, PVector[] p2){}
@@ -92,7 +165,7 @@ void mouseReleased() { //La souris est relachée
  ** boolean lineLine(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4){}
  */
 boolean polyPoly(PVector[] p1, PVector[] p2) { //aled
-
+        // La on passe en anglais par ce que j'etait fatigué
         // go through each of the vertices, plus the next
         // vertex in the list
         int next = 0;

@@ -21,98 +21,32 @@ boolean ready=false;
  ** void draw(){}
     --> Boucle principale du programme*/
 void setup(){
-        size(800, 1000); //Set la taille de la fenetre
+        size(700, 900); //Set la taille de la fenetre
         background(0); //Set la couleur du background
         noCursor(); //Empeche l'affichage du curseur
-        smooth(6); //Antialiasing
-        textAlign(CENTER);
-        frameRate(60); //Full speed
-        //frameRate(30); //Debug
+        smooth(4); //Antialiasing
+        textAlign(CENTER); //Mode d'alignement du texte
+        rectMode(CENTER); //Le mode d'affichage de rectangle : Centré
+        frame.setTitle("Dual! Un projet Open Source");
 
-        s_duel = loadImage("images/s_duel.png");
-        s_duel.resize(600, 156);
-        s_duel_fill = loadImage("images/s_duel_fill.png");
-        s_duel_fill.resize(600, 156);
+        if(!debug) frameRate(60); //Full speed
+        else frameRate(30); //Debug
 
+        s_duel = loadImage("images/s_duel.png"); //chargement des assets du menu
+        s_duel_fill = loadImage("images/s_duel_fill.png"); //chargement des assets du menu
+        s_duel.resize(600, 156); //Resize les images
+        s_duel_fill.resize(600, 156); //Resize les images
 
-        s_duel_header = loadImage("images/s_duel_header.png");
-        font = createFont("images/font.ttf", 32, true);
-        textFont(font);
+        s_duel_header = loadImage("images/s_duel_header.png"); //chargement des assets du menu
+        font = createFont("images/font.ttf", 32, true); //Charge la font du menu
+        textFont(font); //Set la font du menu
 
-        game=false;
-
-        lobby();
-        rectMode(CENTER);
+        game=false; //Set le gamestate a false : Permet de rester sur le lobby au demarrage du programme
 }
-void draw(){
-        if(!game) lobby();
-        else if(game) game();
-        else endGame();
-        cursor();
-}
-void game(){
-        if(bgColor>5) bgColor*=0.95;   //Decremente la valeur de la couleur du background, donne de l'effet
-
-        if(holdingMouse) {holdingTime++; joueur1.hold(holdingTime);}   //Tir droit maintenu
-
-
-        drawBackground(50, 5, bgColor);   //Affiche le background
-
-        bullets1.updateBullets(joueur1.type);
-        bullets2.updateBullets(joueur2.type);
-
-        joueur1.updatePlayer();
-        joueur2.updateAi(joueur1);
-
-        joueur1.reload(holdingMouse);
-        joueur1.munitionDraw(joueur1);
-        joueur2.reload(joueur2.aiShoot);
-        joueur2.munitionDraw(joueur2);
-
-        joueur1.dessiner();
-        joueur2.dessiner();
-
-        if(joueur1.life < 0 || joueur2.life < 0) {
-                game=false;
-                if(joueur1.life<0) {
-                        if(debug) println("Player 2 won");
-                } else if(joueur2.life<0) {
-                        if(debug) println("Player 1 won");
-                }
-        }
-}
-void endGame(){
-        int temp=0;
-}
-void lobby(){
-        background(color(239, 44, 107));
-
-        if(keyPressed && key == ' ') {
-                animTemp+=8;
-        }else if(animTemp>0) animTemp *=.9;
-
-        tint(255);
-        image(s_duel_fill.get(0, 0, s_duel_fill.width, animTemp), width/2-s_duel_fill.width/2, height/2-s_duel_fill.height/2);
-        image(s_duel, width/2-s_duel.width/2, height/2-s_duel.height/2, s_duel.width, s_duel.height);
-
-        //   image(img, dx, dy, dw, dh, sx, sy, sw, sh);
-        // dx, dy, dw, dh   = the area of your display that you want to draw to.
-        // sx, sy, sw, sh  = the part of the image to draw
-
-        tint(40, 40, 40, 100);
-        fill(40, 40, 40, 100);
-        image(s_duel_header, (width/2)-(400/2), (height/3-(99/2)), 400, 99);
-
-        textSize(32);
-        text("HOLD SPACE TO CONTINUE", width/2, height/1.35);
-
-        if(s_duel_fill.height*1.2<animTemp) game=true;
-
-        if(game) {
-                joueur1 = new Types("Zaba", true, color(150,120,120), width/2, 3*height/4, 50, 20); //Declare le joueur 1 : A BOUGER DANS LE LOBBY
-                joueur2 = new Types("Zaba", false, color(200), width/2, height/4, 50, 20); //Declare le joueur 2 : A BOUGER DANS LE LOBBY
-                bullets1 = new Bullets(20, joueur1, joueur2); //Same as above
-                bullets2 = new Bullets(20, joueur2, joueur1); //Again, same as above
-        }
+void draw(){ //Game loop
+        if(!game) lobby(); //Lobby
+        else if(game) game(); //Jeu
+        else endGame(); //Ecran de fin : pas codé pour le moment
+        cursor(); //Affiche le curseur de la souris
 }
 //=======================================================================================================================

@@ -59,8 +59,7 @@ void dessiner(){         //Draws the player
 
 // ==================================================== //
 /*** Bullet Functions ***/
-void munitionDraw(Types joueur){
-        type=joueur.type;
+void munitionDraw(){
         switch(type) {
         case "Zaba":
                 int temp=0;
@@ -79,24 +78,24 @@ void munitionDraw(Types joueur){
 }
 void munitionDrawInternal(int i, float j){
         strokeWeight(0);
-        fill(255);   //A rendre generique
+        fill(255);
 
         pushMatrix();
         translate(position.x, position.y);
         rotate(angle);
-        rect(i*20, j*40, 15, 15);   //A rendre generique
-        popMatrix(); //A rendre generique
+        rect(i*20, j*40, 15, 15);   //A rendre generique (ça n'aura jamais été fait c:)
+        popMatrix();
 }
-void hold(int holdingTime_){
+void hold(int holdingTime_){ //Permet d'incrementer un timer lorsque le joueur maintient le click, utilisé pour les grosses balles
         aiShoot=true;
         if(ammoLeft>0 && holdingTime_>charge*chargeRate && charge < maxCharge) {
                 charge++; ammoLeft--;
                 if(debug) println("Charge level : " +charge);
         }
 }
-void shoot(Bullets bullets_, PVector target){
+void shoot(Bullets bullets_, PVector target){ //Gere le tir
         if(debug) print("Shoot");
-        aiShoot=false;
+        aiShoot=false; //j'ai oublié pourquoi c'etait la ça, mais apparement, j'en ai besoin
         bgColor+=charge*20;
         if(ammoLeft>0 || charge>=1) {
                 if(debug) println(" with charge : "+ charge+", has "+ammoLeft+" ammos left");
@@ -105,7 +104,7 @@ void shoot(Bullets bullets_, PVector target){
                 tempReload=0;
         } else if(debug) println(" failed : no ammo left");
 }
-void reload(boolean noReload){
+void reload(boolean noReload){ //Permet le rechargement
   tempReload++;
   if (tempReload > chargeRate*1.5 && ammoLeft<maxCharge && !noReload) { ammoLeft++; tempReload=0;}
 }
