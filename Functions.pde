@@ -13,8 +13,8 @@ void game(){
         bullets1.updateBullets(joueur1.type); //Mise à jour des balles pour le joueur 1
         bullets2.updateBullets(joueur2.type); //Mise à jour des balles pour le joueur 2
 
-        joueur1.updatePlayer(); //Mise à jour de la position du joueur 1
-        joueur2.updateAi(joueur1); //Mise à jour de la position du joueur 2 en mode AI
+        joueur1.updatePlayer(joueur1); //Mise à jour de la position du joueur 1
+        joueur2.updateAi(joueur2, joueur1); //Mise à jour de la position du joueur 2 en mode AI
 
         joueur1.reload(holdingMouse); //Gere le reload du joueur 1
         joueur1.munitionDraw(); //Gere l'affichage des munitions du joueur 1
@@ -25,7 +25,7 @@ void game(){
         joueur2.dessiner(); //Affiche le joueur 2
 
         if(joueur1.life < 0 || joueur2.life < 0) { //Teste si la vie d'un des deux joueurs est nulle
-                game=false; //Quite la game loop
+                game=2; //Quite la game loop
                 if(joueur1.life<0) {
                         if(debug) println("Player 2 won");
                 } else if(joueur2.life<0) {
@@ -34,7 +34,25 @@ void game(){
         }
 }
 void endGame(){ //Pas codé... oupsi :)
-        int temp=0; //Oooooopsiiiii
+        drawBackground(50, 5, bgColor);   //Affiche le background
+        joueur1.munitionDraw(); //Gere l'affichage des munitions du joueur 1
+        joueur2.munitionDraw(); //Gere l'affichage des munitions du joueur 2
+        joueur1.dessiner(); //Affiche le joueur 1
+        joueur2.dessiner(); //Affiche le joueur 2
+
+
+        String playerWon;
+        if(joueur1.life<0) playerWon = "2";
+        else playerWon = "1";
+
+        fill(0, 240);
+        rect(width/2, height/2, width/2, height/4);
+        fill(250, 250, 250);
+        text("PLAYER " + playerWon + " WON.", width/2, height/2);
+
+        if(keyPressed && key == ' '){
+          game = 0;
+        }
 }
 void lobby(){ //Lobby (ce commentaire est très utile, oui oui)
         background(color(239, 44, 107)); //ROUGE :)
@@ -54,9 +72,9 @@ void lobby(){ //Lobby (ce commentaire est très utile, oui oui)
         textSize(32);
         text("HOLD SPACE OR ENTER TO CONTINUE", width/2, height/1.35);
 
-        if(s_duel_fill.height*1.2<animTemp) game=true; //si animTemp est superieur a un certain threshold : lance le jeu
+        if(s_duel_fill.height*1.2<animTemp) game=1; //si animTemp est superieur a un certain threshold : lance le jeu
 
-        if(game) { //Set des objets pour le jeu
+        if(game == 1) { //Set des objets pour le jeu
                 joueur1 = new Types("Zaba", true, color(150,120,120), width/2, 3*height/4, 50, 20); //Declare le joueur 1 : A BOUGER DANS LE LOBBY
                 joueur2 = new Types("Zaba", false, color(200), width/2, height/4, 50, 20); //Declare le joueur 2 : A BOUGER DANS LE LOBBY
                 bullets1 = new Bullets(20, joueur1, joueur2); //Same as above
@@ -141,17 +159,17 @@ PVector rotatePoint(float angle_, PVector pos_, PVector ref_){ //Permet d'affich
 // Intéraction :
 //=======================================================================================================================
 void keyPressed()  { //Utilisé pour la detection des touches
-        if(game) joueur1.setMove(keyCode, true);
+        if(game == 1) joueur1.setMove(keyCode, true);
 }
 void keyReleased() { //Utilisé pour la detection des touches
-        if(game) joueur1.setMove(keyCode, false);
+        if(game == 1) joueur1.setMove(keyCode, false);
 }
 void mousePressed() { //La souris est maintenue
         holdingMouse=true;
 }
 void mouseReleased() { //La souris est relachée
         holdingMouse=false; //Reset du booleen
-        if(game) joueur1.shoot(bullets1, new PVector(mouseX, mouseY));
+        if(game == 1) joueur1.shoot(bullets1, new PVector(mouseX, mouseY));
         holdingTime=0; //Reset du temps de maintien
 }
 //=======================================================================================================================

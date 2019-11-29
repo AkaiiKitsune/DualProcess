@@ -8,7 +8,7 @@ float angle=PI/2;
 float life=100;
 float[] timers = new float[6]; //Oui oui, j'ai osé faire un tableau pour ça...
 int[] triggers = new int[6];
-int mode = 1; // Attack modes, 0 : idle
+int mode = 0; // Attack modes, 0 : idle
 // 1 : fast attack
 // 2 : slow attack and avoid ----- Mais c'est pas encore codé :)
 // 3 : avoid and attack back ----- Eeeeet... non plus :c
@@ -38,16 +38,16 @@ Players(String type_, int colorPlayer, float x_, float y_, float size_, float sp
 
 //=======================================================================================================================
 /*** Player Functions ***/
-void updatePlayer() {
+void updatePlayer(Types joueur1) {
         acceleration.set((isRight ? 1 : 0)-(isLeft ? 1 : 0),         //Convertis les booleens en int pout permettre-
                          (isDown  ? 1 : 0)-(isUp   ? 1 : 0));        // -De definir le sens du vecteur acceleration
         angle = angleBetweenPV_PV(position, new PVector(mouseX, mouseY));         //Calcule
         if(position.y-size/2<=height/2 || position.y+size/2>=height) velocity.set(velocity.x,0);
         if(position.x-size/2<=0 || position.x+size/2>=width ) velocity.set(0,velocity.y);
-        updateMove(true);
+        updateMove(true, joueur1);
 }
 
-void updateAi(Players player1_){
+void updateAi(Types joueur2, Players player1_){
         timeForTravel = dist(player1_.position.x, player1_.position.y, position.x, position.y)/player1_.speed; //Calcule le temps que met la balle a aller de l'ennemi au joueur 1
         target = PVector.add(player1_.position, PVector.mult(player1_.velocity, timeForTravel)); //Calcule la prochaine position du joueur en fonction de sa vélocité et de sa distance a l'ia
         target = new PVector(constrain((target.x), size/2, width-size/2), constrain(target.y, (height/2)+(size/2), height-(size/2))); //Permet de s'assurer qie la position de la cible reste dans l'aire de jeu
@@ -67,10 +67,17 @@ void updateAi(Players player1_){
         case 0: //Idle
                 txai = width/2 + sin(timers[0]/triggers[4])*200; //Fonctions sin et cos pour generer un mouvement "pseudo aléatoire" en mode idle
                 tyai = height/4+ cos(timers[0]/triggers[5])*200;
-                modeSelect();
-                timers[0]++;
                 acceleration = PVector.sub(new PVector(txai, tyai), position);
+                acceleration.normalize();
 
+                if(triggers[1]!=0) {
+                        triggers[1]=0; //Run once
+                        triggers[2]=int(random(joueur2.ammoLeft, 6)); //Nombres de balles a recharger
+                        if(debug) println("[AI] Recharge : " + joueur2.ammoLeft +  " balles restantes, " + triggers[2] + " balles a recharger...");
+                }else if(triggers[2] < joueur2.ammoLeft){
+                  if(debug) println("[AI] Recharge terminée : " + joueur2.ammoLeft +  " balles restantes.");
+                  modeSelect();
+                }
                 break;
 
         case 1: //Fast shoots
@@ -97,18 +104,36 @@ void updateAi(Players player1_){
                         }
                 }else{ //Plus de balles a tirer...
                           if(debug) println("[AI] Tirs rapides termines, changement de mode...");
-                        triggers[1]=1; //Reset de la fonction de tir
-                        triggers[0]=0; //Reset de de la fonction modeSelect
                         modeSelect(); //Changement de mode
                 }
                 break;
 
         case 2: //Heavy shoot & avoid
-                txai = width - (player1_.position.x*0.5+((joueur2.target.x*0.5))) + sin(timers[0]/triggers[4])*100;
+                txai = (player1_.position.x*0.5+((joueur2.target.x*0.5))) + sin(timers[0]/triggers[4])*100;
+                if(int(random(0,2)) == 0){
+                  txai=width-txai;
+                }
                 tyai = (player1_.position.y*0.3) + sin(timers[0]/triggers[4])*100;
-                acceleration = PVector.sub(new PVector(txai, tyai), position);
+                acceleration = PVector.sub( new PVector(txai, tyai), position);
                 acceleration.normalize();
-                modeSelect();
+
+                if(triggers[1]!=0){
+                  triggers[1]=0; //run once
+                  triggers[2]=int(random(3, joueur2.ammoLeft)); //Nombres de balles a tirer
+                  timers[1]=0; //Temps passé a charger
+                }else if(triggers[2] < joueur2.ammoLeft){ //tant que le temps d'attente n'est pas bon
+                  timers[1]++; //Temps d'attente
+                  joueur2.hold(int(timers[1])); //Hold shoot
+                }else if (timers[1]>0){ //si il a au moins chargé une balle
+                  joueur2.shoot(bullets2, joueur2.target); //Tir
+                  timers[1]=0;
+                  modeSelect();
+                  if(debug) println("[AI] Balle lourde tiree");
+                }else{//Sinon, reinitialise la fonction
+                    timers[1]=0;
+                    modeSelect();
+                    if(debug) println("[AI] Le tir lourd n'as pas pu avoir lieu (pas assez de munitions)");
+                }
                 break; //c'est pas codé du coup le joueur ne fait que se deplacer et ne tire pas
 
         case 3:
@@ -129,33 +154,30 @@ void updateAi(Players player1_){
         angle = angleBetweenPV_PV(position, new PVector(target.x, target.y));
         if(position.y-size/2<=0 || position.y+size/2>=height/2) velocity.set(velocity.x,0);
         if(position.x-size/2<=0 || position.x+size/2>=width ) velocity.set(0,velocity.y);
-        updateMove(false);
+        updateMove(false, joueur2);
 }
 
 int modeSelect(){ //Permet de changer de mode d'attaque
-        timers[0]++;
-        if(timers[0] >= triggers[0]) {
-                timers[0]=0;
-                triggers[0]=int(random(1, 150));
-                int prevMode=mode;
-                while(prevMode==mode) {
-                        mode=int(random(0, 3)); //Permet de changer de mode et de s'assurer que le bot ne repasse pas dans le même mode...
-                }
-                triggers[4]=int(random(10, 40));
-                triggers[5]=int(random(10, 40));
-                  if(debug) println("[AI MODE] Changement de mode :" + mode + ", will change in :" + triggers[0]);
-        }
+            int prevMode=mode;
+            while(prevMode==mode) {
+                    mode=int(random(0, 3)); //Permet de changer de mode et de s'assurer que le bot ne repasse pas dans le même mode...
+            }
+            triggers[4] = int(random(10, 40));
+            triggers[5] = int(random(10, 40));
+            triggers[1]=1;
+            if(debug) println("[AI MODE] Changement de mode :" + mode);
         return mode;
 }
 
-void updateMove(boolean isPlayer){
-        acceleration.setMag(.80); // Set la magnitude de l'acceleration
+void updateMove(boolean isPlayer, Types joueur){
+        acceleration.setMag(.70); // Set la magnitude de l'acceleration
         velocity.add(acceleration); // Ajout du vecteur acceleration au vecteur velocité
         velocity.mult(0.95); // Amortissement de la velocité au fil du temps
-        velocity.limit(speed); // Limite la vitesse max du joueur
+        velocity.limit(speed/(joueur.charge*2)); // Limite la vitesse max du joueur
         position.add(velocity); // Update la position du joueur en ajoutant le vecteur velocité au vecteur position
         if(isPlayer) position.set(constrain(position.x, 0+size/2, width-size/2), constrain(position.y, (height/2)+size/2, height-size/2));
         else position.set(constrain(position.x, 0+size/2, width-size/2), constrain(position.y, size/2, (height/2)-size/2));
+        timers[0]+=0.5;
 }
 
 boolean setMove(int k, boolean b) {     //Permet de verifier si plusieurs touches sont appuiées en même temps.

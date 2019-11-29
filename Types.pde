@@ -8,7 +8,7 @@ int colorPlayer;
 int charge=0;
 int maxCharge=6;
 int ammoLeft=6;
-int chargeRate=15;
+int chargeRate=20;
 boolean aiShoot=true;
 float speed;
 

@@ -1,5 +1,6 @@
 import processing.net.*; //Import network libs
-boolean holdingMouse, game; //Declaration des booleens
+boolean holdingMouse; //Declaration des booleens
+int game;
 int holdingTime; //Compeur de temps de mouse hold
 float bgColor=5; //Variable gerant la couleur du background
 boolean debug=false;
@@ -41,11 +42,11 @@ void setup(){
         font = createFont("images/font.ttf", 32, true); //Charge la font du menu
         textFont(font); //Set la font du menu
 
-        game=false; //Set le gamestate a false : Permet de rester sur le lobby au demarrage du programme
+        game=0; //Set le gamestate a false : Permet de rester sur le lobby au demarrage du programme
 }
 void draw(){ //Game loop
-        if(!game) lobby(); //Lobby
-        else if(game) game(); //Jeu
+        if(game == 0) lobby(); //Lobby
+        else if(game == 1) game(); //Jeu
         else endGame(); //Ecran de fin : pas codé pour le moment
         cursor(); //Affiche le curseur de la souris
 }
