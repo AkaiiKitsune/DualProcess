@@ -26,7 +26,6 @@
     Une recréation d'un jeu en processing
     <br />
     <br />
-    <a href="https://github.com/AkaiiKitsune/DualProcess">View Demo (p5.js)</a>
     ·
     <a href="https://github.com/AkaiiKitsune/DualProcess/issues">Report Bug</a>
     ·
@@ -55,6 +54,8 @@
 Un projet etudiant pour le S3 du DUT MMI à l'IUT de Tarbes. Il s'agit d'une recréation du jeu Dual! en processing.
 Ceci est un exercice de programmation orienté objet.
 
+
+EDIT: Le projet est maintenant en pause, et ne verra surrement plus d'additions, car il a été rendu a notre professeur.
 ### IDE et software
 * [Processing](https://www.processing.org/)
 * [Atom](https://atom.io)
